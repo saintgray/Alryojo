@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ 
+<mapper namespace="com.alj.dream.report.dao.ReportDao">
+ 
+ 
+  <select id="getReportListByIdx" resultType="com.alj.dream.report.domain.ReportInfo">
+	 	SELECT
+	 	mat.match_idx, m2.m_email, m2.m_photo, rep.report_content, rep.m_report
+	 	FROM 
+	 	member m1 JOIN member m2 JOIN report rep JOIN dream.match mat
+	 	ON m2.m_idx=rep.m_report AND m1.m_idx=rep.m_reported AND mat.match_idx=rep.match_idx
+	 	WHERE m1.m_idx=#{arg0}
+
+	 </select>
+
+	 <insert id="insertReport"
+ 		parameterType="com.alj.dream.report.domain.Report"
+ 		useGeneratedKeys="true"
+		keyProperty="report_idx">
+		INSERT INTO report (match_idx, report_content, m_report, m_reported)
+		VALUES (#{match_idx}, #{report_content}, #{m_report}, #{m_reported});
+	 </insert>
+
+
+ 	<select id="selectReportByMatchidx"
+ 			resultType="com.alj.dream.report.domain.Report">
+	 	select 
+	 		*
+	 	from 
+	 		report 
+	 	where 
+	 		m_report = #{param1} and match_idx=#{param2}
+ 	</select>
+
+
+	<select id="todayReportByMyidx"
+ 			resultType="int">
+		select 
+	 		count(report_idx) 
+	 	from 
+	 		report 
+	 	where 
+	 		m_report = #{param1} and  datediff(current_date ,DATE_FORMAT(report_date, '%Y-%m-%d'))=0
+ 	</select> 
+		 
+</mapper>
+

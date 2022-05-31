@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.alj.dream.review.dao.ReviewDao">
+
+	<!-- 해당 유저의 평균 별점을 반환하는 쿼리 -->
+	<!-- 소수점 1째 자리까지만 반환 truncate(평균별점, 1째자리)-->
+	<select id="getStars" resultType="com.alj.dream.review.domain.StarsInfo">
+		SELECT count(*) as count, sum(stars) as sum FROM 
+		dream.member mem JOIN post JOIN dream.match mat JOIN review rev
+		ON 
+		mem.m_idx=post.m_idx AND mat.match_idx=rev.match_idx AND post.post_idx=mat.post_idx
+		WHERE
+		mat.mentor_idx=#{arg0}
+	</select>
+	
+	<select id="getTotalReview" resultType="Integer">
+		SELECT count(*) FROM 
+		dream.member mem JOIN post JOIN dream.match mat JOIN review rev
+		ON 
+		mem.m_idx=post.m_idx and mat.match_idx=rev.match_idx and post.post_idx=mat.post_idx
+		WHERE mat.mentor_idx=${arg0};
+	</select>
+
+	<!--  2022 02 18 종현 
+		해당 유저에 대한 리뷰들 -->
+	<select id="getReviewList" resultType="com.alj.dream.review.domain.Review">
+		SELECT concat(substr(mentee.m_nm, 1,1),'**') as mentee_nm, rev.comment, p.post_nm, stars
+		FROM dream.match mat JOIN post p JOIN review rev JOIN member mentee
+		ON mat.post_idx=p.post_idx and rev.match_idx=mat.match_idx and mentee.m_idx=mat.mentee_idx
+	    where mat.mentor_idx=#{arg0};
+	</select>
+
+
+	<insert id="insertReview">
+		insert into review (stars , comment, match_idx)
+		values(#{param1}, #{param2}, #{param3});
+	</insert>
+	
+	
+	<select id="chkReview" resultType="com.alj.dream.review.domain.Review">
+		select * 
+		from review 
+		where match_idx=#{matchidx}
+	</select>
+	
+
+</mapper>
+ 

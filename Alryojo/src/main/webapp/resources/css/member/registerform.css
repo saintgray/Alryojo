@@ -1,0 +1,92 @@
+@charset "UTF-8";
+input{
+display: block;
+}
+#regGlobalWrap{
+	margin-top: 100px;
+	width: 500px;
+	padding:5px;
+	
+}
+
+label img{
+	vertical-align: text-bottom;
+}
+label span{
+	font-size: 20px;
+}
+.hidden{
+	display: none;
+}
+#basicInfos{
+	display:none;
+	text-align:center;
+}
+
+#interestInfos{
+	min-height: 400px;
+	background-color: rgb(245,245,245);
+	border-radius: 10px;
+}
+#btncontroller{
+    padding: 10px 0;
+    margin-bottom: 100px;
+    margin-top: 20px;
+}
+#regbtncontroller{
+ 	padding: 50px 0;
+    margin-bottom: 100px;
+    margin-top: 50px;
+    border-top:1px solid #FFD601;
+}
+#loading{
+	width:50px;
+	height:50px;
+}
+#interestInfosWrap{
+	text-align: center;
+}
+#msgarea{
+	color:#FFD601;
+	font-weight:light;
+}
+.warningmsg{
+	font-weight:400;
+	font-size: 14px;
+	padding-left: 10px;
+	padding-top: 3px;
+	color: red;
+	visibility: hidden;
+}
+#insertedKey{
+	width: 150px;
+}
+#autharea{
+	width:50%;
+	margin-right:0;
+	margin-left:auto;
+	padding-top: 12px;
+	display:none;
+}
+
+#profilearea #preview{
+	width:150px;
+	height:150px;
+	border-radius: 50%;
+}
+#insertedProfile{
+	line-height:150px;
+}
+
+#locarea{
+	
+	padding: 15px;
+    border-radius: 10px;
+    background: rgb(235,235,235);
+    margin-bottom: 20px;
+}
+
+.inp_loc{
+	
+	cursor:pointer;
+}

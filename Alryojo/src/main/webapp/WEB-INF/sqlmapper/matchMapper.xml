@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.alj.dream.match.dao.MatchDao">
+ 
+ 
+	<insert id="insertMatch">
+	 	INSERT INTO dream.match (post_idx, mentee_idx, mentor_idx)
+
+		values (#{param1},#{param2},#{param3})
+
+ 	</insert>
+ 	
+ 	<select id="selectMatch"
+ 			resultType="com.alj.dream.match.domain.Match">
+	 	select * 
+	 	from dream.match
+	 	where post_idx=#{param1} and mentee_idx=#{param2} and mentor_idx=#{param3}
+ 	</select>
+ 	
+ 	
+ 	<select id="selectMatchInfo" resultType="com.alj.dream.match.domain.MatchInfo">
+	 	select match_idx, post_idx, mentor_idx, mentee_idx
+	 	from dream.match
+	 	where post_idx=#{idx}
+ 	</select>
+ 	
+ 	
+ 	
+ 	<select id="getMatchByMatchidx"
+ 			resultType="com.alj.dream.match.domain.Match">
+ 		select * from dream.match where match_idx=#{matchidx}
+ 	</select>
+ 	
+ 	
+ 	<select id="getMatchDateDiff"
+ 			resultType="int">
+ 		select 
+ 			datediff(current_date ,DATE_FORMAT(match_date, '%Y-%m-%d')) 
+ 		from 
+ 			dream.match 
+ 		where 
+ 			match_idx=#{matchidx}
+ 	</select>
+ 	
+ 	
+ 	
+ 	<!-- 채팅방 나갈때 -->
+ <!-- 	<update id="updateMatchOutyn">
+ 		update dream.match
+ 		set
+ 		<if test='param1==param3'>
+ 			mentee_outyn = 'Y'
+ 		</if>
+ 		<if test='param1==param4'>
+ 			mentor_outyn='Y'
+ 		</if>
+ 		where match_idx = #{param2}
+ 	</update> -->
+ 	
+ 	<update id="updateMatchOutyn">
+ 	update dream.match
+ 		set
+ 		<choose>
+ 		<when test='param1==param3'>
+ 			mentee_outyn = 'Y'
+ 		</when>
+ 		<when test='param1==param4'>
+ 			mentor_outyn='Y'
+ 		</when>
+ 		<otherwise></otherwise>
+ 		</choose> 
+ 		where match_idx = #{param2}
+ 	</update>
+ 	
+ 	
+ 	
+ 	<!-- 매칭하기/취소 -->
+  	<update id="updateMatchYN">
+ 		update dream.match
+ 		set 
+ 		<choose>
+ 		<when test='param1=="Y"'>
+ 			match_yn = 'Y',
+ 			match_date = current_timestamp
+ 		</when>
+ 		<when test='param1=="N"'>
+ 			match_yn = 'N'
+ 		</when>
+ 		<otherwise></otherwise>
+ 		</choose>
+ 		
+ 		where match_idx = #{param2}
+ 	</update>
+ 	
+ 	
+ 	
+ 	
+ 	
+</mapper>

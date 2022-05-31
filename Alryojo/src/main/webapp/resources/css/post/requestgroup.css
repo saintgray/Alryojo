@@ -1,0 +1,120 @@
+@charset "UTF-8";
+
+	
+	article{
+		margin-top: 120px;
+	}
+	#rqg-whole{
+		width: 100%;
+		padding : 0px 10px;
+	}
+	.head-title{
+		margin : 0px 0px 80px;
+		padding-left :40px; 
+		font-size: 2.1em;
+		font-weight: bold;
+	}
+	#emptycard{
+	width : 470px;
+	height : 200px;
+	margin-left: auto;
+	margin-right: auto;
+	
+	}
+	
+	#emptycard-title{
+		padding-top: 15px;
+		text-align: center;
+		font-size: 1.5rem;
+		font-weight: bold;
+	}
+	#emptycard-body{
+		text-align: center; 
+		margin: auto; 
+		color: #6c757d;
+	}
+	.ul-card{
+		padding:0% 3%;
+		height: 100%;
+	}
+	
+	.ul-card>li{
+		margin : 0% 4%;
+		padding : 0px 10px 100px 10px; 
+		position: relative;
+		display: inline-block;
+	}
+	.li-card:nth-child(2n-1){
+		float: left;
+	}
+	.li-card:nth-child(2n){
+		float: right;
+	}
+	
+	@media screen and (max-width: 1400px) {
+		 .ul-card>li{
+		 	max-width : 470px;
+			margin-left: auto;
+			margin-right: auto;
+			padding : 0px 10px 80px 10px; 
+			display: block;
+		}
+		
+		.li-card:nth-child(2n-1){
+			float: none;
+		}
+		.li-card:nth-child(2n){
+			float: none;
+		}
+	}
+	
+	#rqcard{
+		width: 430px;
+		display: block;
+		border: 1px solid #142B6F;
+		
+	}
+	
+	.card-header{	 
+		background-color: #FFD601!important;
+		height: 120px;
+	}
+	.post-title{
+		text-align: center;
+		font-size: 1.75rem;
+		font-weight: bold;
+	}
+	.post-date{
+		margin-bottom: 5px;
+		font-size: 0.9em;
+	}
+	.post-category{
+		margin-right : 20px;
+		float: right;
+		font-size: 1.45em;
+		font-weight: bold;
+	}
+	
+	.photo-list{
+		padding-left : 80px; 
+
+	}
+	.m_photo{
+		width:40px;
+		height:40px;
+		border-radius: 50%;
+	}
+	
+	.rqMember{
+		width : 300px!important;
+		margin : 10px 50px 10px 50px;
+		heigth : 20px;
+	}
+	.card-body{
+		margin: auto;
+
+	}
+	.rqMember:hover{
+		color:#FFF;
+	}
+	

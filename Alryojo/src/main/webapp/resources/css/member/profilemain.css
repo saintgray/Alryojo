@@ -1,0 +1,111 @@
+@charset "UTF-8";
+
+#profileglobalwrap{
+	padding-top: 150px;
+	padding-left:10px;
+	padding-right: 10px;
+}
+#regarea{
+	position: relative;
+    width: 500px;
+    height: 300px;
+    border: 5px solid rgb(59,59,59);
+    border-style: dashed;
+    border-radius: 30px;
+}
+#regarea #msg{
+	font-size: 28px;
+    color: rgb(59,59,59);
+    font-weight: 700;
+    padding: 20px;
+    text-align: center;
+}
+#myphoto{
+	width:100px;
+	height:100px;
+}
+
+#plus_icon{
+	position :absolute;
+	left: 50%;
+	bottom: 10px;
+	width: 50px;
+	height: 50px;
+	transform: translate(-50%);
+	cursor: pointer;
+	
+}
+
+  .bg_template {
+      font-size: 0px;
+      display: inline-block;    
+  }
+ 
+
+  .star{
+    width:60px;  
+    border-right: 15px solid white;
+    background-position: left;
+
+  }
+  #revarea{
+  	cursor:default;
+  }
+  
+  #revarea .star{
+  	width:30px;
+  	border-right:8px solid #FFF;
+  }
+  #revarea .classes::after{
+  	outline: 1px solid #FCA10690;
+  	content:'';
+  	display: block;
+  	margin-top: 5px;
+  }
+  	
+  .activity{
+  	font-size:20px;
+  }
+  .activity_info{
+  	display: inline-block;
+  	padding-left: 10px;
+  	padding-right: 10px;
+  }
+  .br-col{
+  	   outline: 1px solid rgb(197,197,197);
+  }
+  .edit{
+  	height: 30px;
+    padding: 0.175rem 0.475rem;
+    border-radius: 15px;
+  }
+  .ui-timepicker-container{
+  	z-index: 9999 !important;
+  }
+  #calltime{
+  	width: 150px;
+  }
+  .delRow{
+		width:15px;
+		height:15px;
+		border-radius: 50%;
+		border: 1px solid rgb(195,195,195);
+		cursor:pointer;
+  }
+  #label_files{
+  	cursor: pointer;
+  }
+  #attachedFilesWrap{
+  	border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 50px;
+    background-color: rgb(236,236,236);
+
+  }
+  
+  .rev{
+  	background-color: rgb(249,249,249);
+  	border-radius: 15px;
+  }
+  
+

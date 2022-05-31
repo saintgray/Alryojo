@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.alj.dream.notice.dao.NoticeDao">
+ 
+ 
+ 	<select id="getNoticeList" resultType="com.alj.dream.notice.domain.Notice">
+ 		SELECT notice_idx, notice_title, date_format(notice_regdate,'%Y-%m-%d') as regdate
+ 		FROM notice
+ 		WHERE
+ 		notice_deldate is null
+ 		<if test="arg2!=null">
+ 			AND (notice_title like concat('%',#{arg2},'%') OR notice_content like concat('%',#{arg2},'%'))
+ 		</if>
+ 		order by notice_regdate desc 
+ 	    limit #{arg0}, #{arg1}
+ 		
+ 	</select>
+ 	
+ 	<select id="getTotalNumOfNotice" resultType="String">
+ 	
+ 		select count(*) from notice
+ 		WHERE notice_deldate is null
+ 		<if test="arg0!=null">
+ 			AND (notice_title like concat('%',#{arg0},'%') OR notice_content like concat('%',#{arg0},'%')) 
+ 		</if>
+ 		
+ 	</select>
+ 	
+  	<insert id="insertNotice" parameterType="com.alj.dream.notice.domain.NoticeRegisterData" useGeneratedKeys="true" keyProperty="notice_idx">
+ 		insert into notice
+ 		(admin_idx, notice_title, notice_content) 
+ 		values
+ 		(
+ 		#{admin_idx},
+ 		#{notice_title},
+ 		#{notice_content}
+ 		)
+ 	</insert>
+ 	<!-- #{arg0},#{arg1}를 사용할때는 매개변수가 여러개일시 사용하고,
+ 		 매개변수로 여러개를 객체로 만들어서 받을때는 parameterType 에 그 객체명의 풀 네임(경로)을 써주고 넣어주어야 할 값을 그 객체에 변수명과 일치시켜서 사용함 -->
+ 	<select id="getNotice" resultType="com.alj.dream.notice.domain.NoticeContent">
+ 		 	SELECT 
+				no.notice_idx, 
+    			no.notice_title, 
+    			no.notice_content, 
+    			no.notice_regdate, 
+    			no.notice_editdate,
+    			ad.admin_nm,
+    			no.admin_idx
+			FROM dream.notice as no join dream.admin as ad
+			  on no.admin_idx = ad.admin_idx
+            where no.notice_idx = #{notice_idx}
+ 	</select>
+ 	
+ 	<insert id="updateNotice" parameterType="com.alj.dream.notice.domain.NoticeRegisterData">
+ 		update notice
+ 		set notice_title = #{notice_title},
+ 		    notice_content = #{notice_content},
+ 		 	notice_editdate = current_timestamp
+ 		where notice_idx = #{notice_idx}
+ 	</insert>
+ 	
+ 	<!-- 공지사항 삭제 -->
+ 	<update id="deleteNotice" parameterType="String">
+ 		UPDATE dream.notice
+ 		SET notice_deldate=current_timestamp
+ 		WHERE notice_idx=#{arg0}
+ 	</update>
+ 	
+ </mapper>
+ 
+ 

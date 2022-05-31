@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.alj.dream.interest.dao.InterestDao">
+ 
+ 	<insert id="registerUserInterest">
+ 		INSERT INTO interestcat(m_idx, cat_idx) VALUES
+ 		<foreach collection="arg0" separator="," item="cat_idx">
+ 			(#{arg1},#{cat_idx})
+ 		</foreach>
+ 	
+ 	</insert>
+ 	
+ 	
+ 	<!-- 2022 02 11 한 회원의 정보 및 관심사  가져오기 -->
+ 	<select id="getUserInterest" resultType="com.alj.dream.category.domain.ChildCategory">
+ 		SELECT c.cat_idx, c.cat_nm 
+ 		FROM interestcat i JOIN category c
+ 		ON i.cat_idx = c.cat_idx
+ 		WHERE i.m_idx=#{arg0};
+ 	</select>
+ 	
+ 	<delete id="deleteAllInterest">
+ 		DELETE FROM dream.interestcat WHERE m_idx=#{arg0}
+ 	</delete>
+ 
+ </mapper>

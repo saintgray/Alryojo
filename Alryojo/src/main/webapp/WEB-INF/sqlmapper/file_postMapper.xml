@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.alj.dream.file_post.dao.PostFilesDao">
+
+	<select id="selectCountByPostIdx" resultType="int">
+		select count(*)
+		from file_post
+		where post_idx=#{idx} and file_deldate is null
+	</select>
+	
+	<update id="deletePostFile">
+		update file_post
+		set file_deldate=current_timestamp()
+		where post_idx=#{idx} and file_deldate is null
+	</update>
+	
+	<insert id="insertPostFile"
+			parameterType="com.alj.dream.file_post.domain.PostFileRequest">
+		INSERT INTO file_post (file_nm, post_idx, file_exet, file_size, file_originnm)
+		VALUES
+		(#{file_nm}, #{post_idx}, #{file_exet}, #{file_size}, #{file_originnm})
+	</insert>
+	
+	<update id="deleteOneFile">
+		update file_post
+		set file_deldate=current_timestamp()
+		where post_idx=#{post_idx} and file_nm=#{file_nm}
+	</update>
+	
+	<select id="selectByPostIdx"
+			resultType="com.alj.dream.file_post.domain.PostFileRequest">
+		select file_nm, post_idx, file_exet, file_size, file_originnm
+		from file_post
+		where post_idx=#{idx} and file_deldate is null
+	</select>
+	
+	<!-- deldate 가 어제 이전인 파일 목록 불러오기 -->
+	<select id="selectDeletedFiles"
+			resultType="com.alj.dream.file_post.domain.PostFileRequest">
+		select * from file_post
+		where
+		<![CDATA[date(file_deldate) < date(now())]]>
+	</select>
+	
+	<select id="checkExistence"
+			resultType="int">
+		select exists(select * from file_post where file_nm=#{file_nm})
+	</select>
+
+</mapper>

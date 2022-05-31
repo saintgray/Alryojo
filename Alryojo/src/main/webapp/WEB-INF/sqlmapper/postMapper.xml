@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.alj.dream.post.dao.PostDao">
+
+	<insert id="insertPost" 
+			parameterType="com.alj.dream.post.domain.PostWriteRequest"
+			useGeneratedKeys="true"
+			keyProperty="post_idx">
+		INSERT INTO post (post_nm, post_content, cat_idx, wanted, m_idx)
+		VALUES (#{post_nm}, #{post_content}, #{cat_idx}, #{wanted}, #{m_idx});
+	</insert>
+
+	<!-- 게시물 수정 -->
+	<update id="updatePost"
+			parameterType="com.alj.dream.post.domain.PostEditRequest">
+		UPDATE post
+		SET post_nm = #{post_nm},
+			post_content = #{post_content},
+			post_editdate = CURRENT_TIMESTAMP()
+		WHERE post_idx = #{post_idx};
+	</update>
+
+	<!-- 게시물 삭제 : 삭제날짜 추가 -->
+	<!-- 게시물 첨부파일 삭제... -->
+	<update id="deletePost" parameterType="int">
+		update post
+		set post_deldate=current_timestamp()
+		where post_idx=#{idx}
+	</update>
+
+	<select id="selectPostByPostIdx"
+			resultType="com.alj.dream.post.domain.PostViewRequest">
+		select distinct p.post_idx, post_nm, post_content, post_regdate, post_editdate, p.cat_idx, c.cat_nm, m_idx, (select count(*) from dream.match where post_idx=#{idx}) as match_count, wanted
+		from post p left join category c on p.cat_idx=c.cat_idx
+				left join dream.match m on p.post_idx=m.post_idx
+		where p.post_deldate is null and p.post_idx=#{idx};
+	</select>
+
+	<select id="selectWriteRequestByPostIdx"
+			resultType="com.alj.dream.post.domain.PostWriteRequest">
+		select post_idx, post_nm, post_content, p.cat_idx, c.cat_nm, wanted, m_idx
+		from post p join category c on p.cat_idx=c.cat_idx
+		where post_idx=#{idx}
+	</select>
+
+	<select id="selectListByMemberIdx"
+			parameterType="com.alj.dream.post.domain.SearchParams"
+			resultType="com.alj.dream.post.domain.PostListInfo">
+		select p.post_idx, p.post_nm, p.m_idx, c.cat_idx, c.cat_nm, (select count(*)  from dream.match m JOIN post p2 on p2.post_idx= m.post_idx and p2.post_idx=p.post_idx) as match_count
+		from post p left join category c on p.cat_idx=c.cat_idx
+		where p.post_deldate is null and p.m_idx=#{m_idx} and p.wanted=#{wanted}
+		order by post_regdate desc limit #{index}, #{count}
+	</select>
+
+	<select id="selectTotalCountByIdx" resultType="int">
+		select count(*) from post where post_deldate is null and m_idx=#{m_idx} and wanted=#{wanted}
+	</select>
+	
+	<select id="selectTotalCountBySearchParams"
+			parameterType="com.alj.dream.post.domain.SearchParams"
+			resultType="int">
+		select count(distinct p.post_idx)
+		from post p left join member on p.m_idx=member.m_idx
+				    left join dream.match m on p.post_idx=m.post_idx
+		<where>
+			post_deldate is null and (m.match_yn='N' or m.match_yn is null)
+			and p.m_idx!=#{m_idx} and wanted=#{wanted}
+			<!-- <if test="cat_idx>0">
+				and cat_idx=#{cat_idx}
+			</if> -->
+
+			<if test="childrens != null">
+				AND cat_idx IN
+				<foreach collection="childrens" item="category" open="(" close=")" separator=",">
+					#{category.cat_idx}
+
+				</foreach>
+			</if>
+			<if test="loc_idx>0">
+				and loc_idx=#{loc_idx}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectListBySearchParams"
+			parameterType="com.alj.dream.post.domain.SearchParams"
+			resultType="com.alj.dream.post.domain.PostListInfo">
+		select p.post_idx, p.post_nm, p.m_idx, c.cat_idx, c.cat_nm, member.loc_idx, loc.loc_nm, (select count(*) from dream.match m JOIN post p2 on p2.post_idx= m.post_idx and p2.post_idx=p.post_idx) as match_count
+		from post p left join category c on p.cat_idx=c.cat_idx
+					left join member on p.m_idx=member.m_idx
+					left join loc on member.loc_idx=loc.loc_idx
+		<where>
+			p.post_deldate is null and p.m_idx!=#{m_idx} and p.wanted=#{wanted}
+			<!-- <if test="cat_idx>0">
+				and p.cat_idx=#{cat_idx}
+			</if> -->
+
+			<if test="childrens!=null">
+				AND c.cat_idx IN
+				<foreach collection="childrens" item="category" open="(" close=")" separator=",">
+					#{category.cat_idx}
+
+				</foreach>
+			</if>
+			<if test="loc_idx>0">
+				and member.loc_idx=#{loc_idx}
+			</if>
+		</where>
+		order by post_regdate desc limit #{index}, #{count}
+	</select>
+	
+	<select id="selectLocInterest" resultType="java.util.HashMap">
+		select m.m_idx, m.loc_idx, i.cat_idx
+		from member m left join interestcat i on m.m_idx=i.m_idx
+		where m.m_idx=#{m_idx}
+	</select>
+	
+	<select id="selectRecommendedList"
+			resultType="com.alj.dream.post.domain.PostListInfo">
+		select p.post_idx, p.post_nm, p.m_idx, c.cat_idx, c.cat_nm, member.loc_idx, loc.loc_nm, (select count(*) from dream.match m JOIN post p2 on p2.post_idx= m.post_idx and p2.post_idx=p.post_idx) as match_count
+		from post p left join category c on p.cat_idx=c.cat_idx
+					left join member on p.m_idx=member.m_idx
+					left join loc on member.loc_idx=loc.loc_idx
+		<where>
+			p.post_deldate is null and p.m_idx!=#{arg0} and p.wanted=#{arg1}
+			<!-- <if test="cat_idx>0">
+				and p.cat_idx=#{cat_idx}
+			</if> -->
+
+			<if test='arg2!=null'>			
+				AND p.cat_idx IN
+				<foreach collection="arg2" item="interest" open="(" separator="," close=")">
+					#{interest.cat_idx}
+				</foreach>
+			
+			</if>
+			<if test="arg3>0">
+				and member.loc_idx=#{arg3}
+			</if>
+		</where>
+		order by rand() limit 0, 5
+	</select>
+
+</mapper>

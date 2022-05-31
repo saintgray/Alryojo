@@ -1,0 +1,33 @@
+@charset "UTF-8";
+
+#attachedfiles img{
+	max-height:64px;
+	max-width: 100px;
+	width:auto;
+	order:1;
+}
+#imageWrapper{
+	position: absolute;
+	display: none;
+	justify-content: center;
+	align-items: center;
+	top: 0%;
+	z-index: 100;
+}
+#bigImage{
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+#btnArea{
+	margin: 30px auto;
+	text-align: center;
+}
+#matchBtn{
+	width:100px;
+}
+#PostViewArea{
+    margin-top: 150px;
+    margin-bottom: 50px;
+}

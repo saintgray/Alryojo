@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.alj.dream.member.dao.MemberDao">
+ 
+ 
+ 	<insert id="insertMember" parameterType="com.alj.dream.member.domain.RegisterInfo" useGeneratedKeys="true" keyProperty="m_idx">
+ 		insert into member(m_email, m_password, m_nm, m_adyn, m_photo, loc_idx) values(#{m_email}, #{m_password},#{m_nm},#{m_adyn},#{m_photo},#{loc_idx})
+ 	</insert>
+ 	
+ 	<select id="selectByEmail" resultType="String">
+ 		select m_email from member where m_email = #{arg0}
+ 	</select>
+ 	
+ 	<select id="getMemberList" parameterType="com.alj.dream.member.domain.PageRequest" resultType="com.alj.dream.member.domain.MemberInfo">
+ 	
+	 	SELECT m_idx, m_email, m_nm, m_photo, m_regdate, m_quitdate, m_blacklist,(select count(*) FROM 
+																					member m join report rep
+		 																				on m.m_idx=rep.m_reported
+																					WHERE memrow.m_idx=m.m_idx
+																					) as reportCount
+		FROM member memrow
+		<where>
+			<if test='"Y".equals(blacklisted)'>
+				AND memrow.m_blacklist='Y'
+			</if>
+			<if test='"onlyid".equals(searchType)'>
+				AND m_email like concat('%',#{keyword},'%')
+			</if>
+			<if test='"onlyname".equals(searchType)'>
+				AND m_nm like concat('%',#{keyword},'%')
+			</if>
+			<if test='"all".equals(searchType)'>
+				AND ( m_nm like concat('%',#{keyword},'%') OR m_email like concat('%',#{keyword},'%') )
+			</if>
+		</where>
+		<if test='"m_regdate".equals(sortType)'>
+			order by m_regdate
+		</if>
+		<if test='"asc".equals(sortBy)'>
+			asc
+		</if>
+		<if test='"desc".equals(sortBy)'>
+			desc
+		</if>
+		
+		
+		
+		limit #{firstMemberIndexOfSelectedPage}, #{numOfMemberPerPage}
+	
+ 	
+ 	</select>
+ 	
+ 	<select id="getTotalNumOfMember" resultType="Integer" parameterType="com.alj.dream.member.domain.PageRequest">
+ 	
+ 		SELECT count(*) from member memrow
+ 		<where>
+			<if test='"Y".equals(blacklisted)'>
+				AND memrow.m_blacklist='Y'
+			</if>
+			<if test='"onlyid".equals(searchType)'>
+				AND m_email like concat('%',#{keyword},'%')
+			</if>
+			<if test='"onlyname".equals(searchType)'>
+				AND m_nm like concat('%',#{keyword},'%')
+			</if>
+			<if test='"all".equals(searchType)'>
+				AND ( m_nm like concat('%',#{keyword},'%') OR m_email like concat('%',#{keyword},'%') )
+			</if>
+ 		</where>
+		<if test='"m_regdate".equals(sortType)'>
+			order by m_regdate
+		</if>
+		<if test='"asc".equals(sortBy)'>
+			asc
+		</if>
+		<if test='"desc".equals(sortBy)'>
+			desc
+		</if>
+		
+ 	</select>
+ 	
+ 	
+ 	
+ 	<select id="getMemberInfo" resultType="com.alj.dream.member.domain.MemberInfo">
+ 		SELECT 
+				m_idx, 
+    			m_email, 
+    			m_nm,
+    			m_photo,  
+    			m_regdate,
+    			m_quitdate,
+    			m_blacklist,
+    			(select count(*) FROM 
+				member join report
+				on member.m_idx=report.m_reported
+				WHERE m_idx=#{arg0}
+				) as reportCount
+			FROM member
+			WHERE m_idx=#{arg0}
+ 	
+ 	</select>
+ 	
+ 	<!-- member의 idx로 멤버 정보 반환 -->
+ 	<select id="selectByIdx" resultType="com.alj.dream.member.domain.MyInfo">
+		SELECT m_email, m_nm, m_photo, date_format(m_regdate,'%Y년 %m월 %d일') as m_regdate from dream.member where m_idx=#{m_idx}
+	</select>
+	
+	<!-- member 의 정보 수정 -->
+	<update id="editMember">
+	
+		UPDATE member
+		SET
+		<if test="m_nm!=null">
+			m_nm=#{m_nm}
+		</if>
+		<if test="m_photo!=null">
+			m_photo=#{m_photo}
+		</if>
+		<if test="m_password!=null">
+			m_password=#{m_password}
+		</if>
+		
+		WHERE m_idx=#{m_idx}
+		
+	
+	</update>
+	
+	<!-- 회원 탈퇴 -->
+	<update id="quitMember">
+	
+		UPDATE member
+		SET
+		m_quitdate=CURRENT_TIMESTAMP
+		WHERE m_idx=#{arg0}
+		
+	</update>
+	
+	
+	
+	<!-- 해당 계정명의 tempCode update -->
+	<update id="updateTempCodeByEmail">
+		UPDATE member 
+		SET
+		tempcode=#{arg0}
+		WHERE m_email=#{arg1}
+	
+	</update>
+	
+	<!-- 메일로 보낸 임시 keyCode 와 일치하는 Member의 패스워드를 새로운 패스워드로 변경 -->
+	<update id="updateMemberPwByKeyCode">
+	
+		UPDATE member
+		SET
+		m_password=#{arg1}
+		WHERE tempcode=#{arg0}
+	
+	</update>
+	
+	<!-- 스케쥴러를 통해 일주일에 한번 임시키코드 삭제 -->
+	<update id="expireTempCode">
+		Update member
+		SET tempcode=null where tempcode is not null AND m_quitdate is null
+	</update>
+	
+	<!-- 비밀번호 재설정을 위한 keyCode 가 있는지 확인 -->
+	<select id="getCountByKeyCode" resultType="Integer">
+		SELECT count(*) FROM member
+		WHERE tempcode=#{arg0} AND m_quitdate is null
+	</select>
+	
+	
+ 	
+ 	
+ 	
+ 	
+ </mapper>
+ 
+ 

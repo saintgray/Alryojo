@@ -1,0 +1,45 @@
+@charset "UTF-8";
+
+@media ( max-width : 750px) {
+	.subinfo {
+		display: none;
+	}
+}
+
+#listTable {
+	border-collapse: separate;
+	border-spacing: 0 30px;
+	text-align: center;
+	min-width: 600px;
+}
+
+.indexes {
+	outline: 1px solid rgb(123, 123, 123);
+	background: rgb(197, 197, 197);
+}
+
+.pageswip {
+	font-size: 30px;
+	cursor: pointer;
+}
+
+.pageNum {
+	line-height: 36px;
+}
+
+.pageNum:hover {
+	text-decoration: none;
+}
+
+#globalwrap {
+	margin-top: 150px;
+	margin-bottom: 50px;
+}
+
+.reply{
+	
+	cursor: pointer;
+}
+.reply:hover {
+	text-decoration: underline;
+}

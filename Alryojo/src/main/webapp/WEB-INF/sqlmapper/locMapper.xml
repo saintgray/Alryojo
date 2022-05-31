@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.alj.dream.loc.dao.LocDao">
+ 
+	 <select id="getLocations" resultType="com.alj.dream.loc.domain.Location">
+	 
+		 	select*from dream.loc
+		 	<if test="arg0!=null">
+		 		JOIN member mem
+		 		ON mem.loc_idx=loc.loc_idx
+		 		WHERE mem.m_idx=#{arg0}
+		 	</if>
+	 
+	 
+	 </select>
+ 
+ </mapper>

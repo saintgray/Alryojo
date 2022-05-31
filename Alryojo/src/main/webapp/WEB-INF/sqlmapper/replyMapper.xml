@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.alj.dream.reply.dao.ReplyDao">
+ 	
+ 	<insert id="insertReply" parameterType="com.alj.dream.reply.domain.ReplyRegisterData">
+ 		insert into reply(reply_content, m_idx, admin_idx, qna_idx) values (#{reply_content}, #{m_idx}, #{admin_idx}, #{qna_idx})
+ 	</insert>
+ 	
+ 	<select id="getReplyByQnaIdx" resultType="com.alj.dream.reply.domain.ReplyInfo">
+ 		SELECT reply_idx, date_format(reply_regdate,'%Y-%m-%d') AS reply_regdate, ad.admin_nm 
+ 		
+ 	    FROM
+ 		admin ad JOIN reply re
+ 		ON
+ 		ad.admin_idx=re.admin_idx
+ 		WHERE re.qna_idx=#{arg0}
+ 	</select>
+ 	
+ 	<select id="getContent" resultType="com.alj.dream.reply.domain.Reply">
+ 		SELECT r.reply_content, r.reply_regdate, r.reply_editdate, r.m_idx, ad.admin_nm, q.qna_title
+ 		FROM reply r join qna q join admin ad
+ 		ON r.qna_idx=q.qna_idx AND r.admin_idx=ad.admin_idx
+ 		WHERE r.reply_idx=#{arg0}
+ 	</select> 
+ 		
+ 		
+ </mapper>

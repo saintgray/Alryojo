@@ -1,0 +1,122 @@
+@charset "UTF-8";
+	html,body{
+		margin: 0;
+		padding: 0;
+		height:100%;
+	}
+	
+	/* footer 를 제외한 모든 contents 를 감싸는 영역   */
+	/* 컨텐츠가 화면보다 작던 길던(내용이 짧던 많던) footer는 최하단에 고정된다*/
+	.gw{
+		min-height:100%;
+		height:auto;
+		margin-bottom:-95px;
+		padding-bottom: 91px;
+	}
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    
+    *{
+    	font-family: 'Noto Sans KR', sans-serif;
+    }
+    
+    .btn-grey{
+	   	color: #000;
+	    background-color: rgb(245,245,245);
+	    border-color: rgb(245,245,245);
+    }
+    .btn-general{
+    	color: #FFF;
+	    background-color: #142B6F;
+	    border-color: #142B6F;
+    }
+    
+    .btn-general:hover{
+    	 color: #FFF;
+    	 background-color: #051c5a;
+    	 border-color: #051c5a;
+    }
+    .btn-orange{
+    	color:#000;
+    	background-color:#FCA106;
+    	border-color:#FCA106;
+    }
+    .btn-orange:hover{
+    	color:#FFF;
+    	background-color:#FCA106;
+    	border-color:#FCA106;
+    }
+     
+   .banner{
+   	font-size:30px;
+   	font-weight: bolder;
+   
+   	
+   }
+  
+  .banner::after, .subbanner::after{
+  	content: '';
+    border-bottom: 1px solid #FFD601;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 40px;
+    display: block;
+  }
+  .subbanner{
+  	font-size: 25px;
+  	font-weight: 500px;
+  }
+
+  .descript{
+  	font-size: 15px;
+  	color: rgb(197,	197,197);
+  	font-weight: light;
+  }
+  a{
+  	color:black;
+  	text-decoration: none;
+  }
+  a:hover{
+  	text-decoration: underline;
+  	color: black;
+  }
+  
+  #logo, #logo img{
+    	width: 120px;
+    height: 50px;
+  }
+  
+  @media(max-width:470px){
+  	.banner{
+  		font-size: 23px;
+  	}
+  }
+  
+
+  
+ /* Scrollbar style */
+ ::-webkit-scrollbar {
+	width: 16px;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: rgb(112, 112, 112);
+	border-radius: 15px;
+	width: 13px;
+	height: 15px;
+	border: 2px solid rgb(239, 239, 239);
+}
+
+::-webkit-scrollbar-track {
+	background-color: blue;
+	background-color: rgb(239, 239, 239);
+	border-radius: 10px;
+}
+
+::-webkit-scrollbar-button {
+	width: 0;
+	height: 0;
+}

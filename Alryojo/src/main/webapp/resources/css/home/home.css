@@ -1,0 +1,159 @@
+@charset "UTF-8";
+	#globalwrap {
+      width: 80%;
+      margin: 0 auto;
+    }
+    
+    #bannerarea{
+    	width:900px;
+    	height:300px;
+    	position:relative;
+    	padding:0;
+    	margin-top: 100px;
+    	overflow: hidden;
+    	margin-top: 45px;
+    	margin-left: auto;
+    	margin-right: auto;
+    	min-width :290px;
+   	    box-shadow: 0 5px 0 0 #e1dee680;
+   	    border-radius: 10px;
+    }
+    
+    
+  	#maininfo{
+  		    border-collapse: separate;
+   			 border-spacing: 40px 5px;
+  	}
+  	.count{
+  		font-size: 70px;
+  	}
+  	#countarea::after, #countarea::before{
+  		display: block;
+  		content:'';
+  		width: 70%;
+  		outline: 1px solid #FFD601;
+  		margin:20px auto;
+  	}
+  	
+  	#countarea{
+  		margin-top: 100px;
+  		margin-bottom: 50px;
+  	}
+  	
+  	
+  	/* cat-card style*/
+  	.cat-card{
+  		position:relative;
+  		background-color: white;
+    	border-radius: 15px;
+  	}
+  	.cat-card img{
+  		width: 220px;
+  		height:120px;
+  		border-radius: 15px;
+  	}
+  	.cat-card:hover{
+    	transform:scale(1.4,1.4);
+    	transition: all ease 0.5s;
+    	z-index:1;
+    	
+    }
+    .cat-card{
+    	transform:scale(1,1);
+    	transition: all ease 0.5s;
+ 	
+    }
+    @media(max-width:900px){
+    	
+    	#catarea{
+    		flex-direction: column !important;
+    	}
+    	
+    	.cat-card{
+    		margin-top: 1rem !important;
+    		margin-bottom: 1rem !important;
+    	}
+    }
+    
+    /* 메인 버튼 shadow */
+    #findmentorbtn, #findmenteebtn{
+    	    box-shadow: 0 5px 0 0 #142b6f40;
+    }
+    
+    #writepostbtn{
+    	    box-shadow: 0 -5px 0 0 #142b6f40;
+    }
+
+  	
+  	
+  	/* 지역 선택 style */
+  	#locsearcharea{
+	  	background-color: rgb(239,239,239);
+	    border-radius: 12px;
+  		
+  	}
+  	#locsearcharea .loclink{
+	    display: inline-block;
+	    background-color: #FCA106;
+	    padding: 5px;
+	    border-radius: 10px;
+	    font-size: 13px;
+	    color: rgb(250,250,250);
+	    text-decoration: none;
+  	}
+  	
+    
+    /*반응형 웹페이지에서 rolling banner 에 대해 이미지의 깨짐을 방지하는 방법  (min-width=100%), (height:auto)*/
+    #bannerarea img{
+	    min-width:100%;
+	    height:auto;
+	    position: relative;
+	    border-radius: 5px;
+    }
+    
+    
+
+  
+   #mnmbtn{
+   	margin-top: 120px;
+   }
+   #mnmbtn button{
+   	height: 100px;
+    width: 290px;
+    margin: 0 auto;
+    border-radius: 20px;
+    font-size: 30px;
+    font-weight: 600;
+   }
+   
+   
+    @media(max-width: 800px){
+    
+    	#bannerarea{
+    		width:500px;
+    		height:200px;
+    	}
+  
+   	}
+  
+    @media(max-width: 500px){
+   
+	   	#bannerarea{
+	   		width:256px;
+	   		height:96px;
+	   	}
+	  
+	   	
+	   	#mnmbtn{
+	   		margin-top: 50px;
+	   	}
+	   	#mnmbtn button{
+	   		width: 200px;
+	   		font-size: 20px;
+	   		height: 80px;
+	   	}
+   	
+   }
+ 
+  
+    

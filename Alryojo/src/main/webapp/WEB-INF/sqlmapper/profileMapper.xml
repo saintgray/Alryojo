@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ 
+ <mapper namespace="com.alj.dream.profile.dao.ProfileDao">
+ 
+ 	<select id="getProfile" resultType="com.alj.dream.profile.domain.MyProfileInfo">
+ 			SELECT profile_idx, 
+ 				   m.m_idx, 
+ 				   line, 
+ 				   calltime, 
+ 				   career, 
+ 				   qna, 
+ 				   date_format(profile_regdate,'%Y년 %m월 %d일') AS profile_regdate, 
+ 				   m.m_quitdate,
+ 				   m.m_photo,
+ 				   (SELECT count(*) 
+ 				   		FROM 
+						member m2 JOIN dream.match mat 
+						ON mat.mentor_idx=m2.m_idx AND m.m_idx=m2.m_idx 
+						WHERE mat.match_yn='Y') AS matchCount,
+				   (SELECT count(*) 
+						FROM 
+						dream.match mat JOIN review rev 
+						ON mat.match_idx=rev.match_idx AND mat.mentor_idx=m.m_idx) AS reviewCount 
+ 				FROM
+ 				profile JOIN member m
+                ON m.m_idx=profile.m_idx
+ 				WHERE
+ 				m.m_idx=#{arg0} and profile_deldate is null
+ 	</select>
+ 	
+ 	
+ 
+ 	
+ 	<insert id="insertProfile" parameterType="com.alj.dream.profile.domain.ProfileRegisterData" useGeneratedKeys="true" keyProperty="profile_idx">
+ 		INSERT INTO dream.profile(m_idx,line,calltime,career,qna) values(#{m_idx},#{line},#{calltime},#{career},#{qna})
+ 	</insert>
+ 	
+ 	
+ 	<!-- 프로필 삭제 -->
+	<update id="deleteProfile" parameterType="String">
+		UPDATE dream.profile set profile_deldate=current_timestamp
+		WHERE profile_idx=#{arg0}	
+	</update>
+	
+		
+	<!-- 프로필 수정 -->
+	<update id="editProfile" parameterType="com.alj.dream.profile.domain.ProfileRegisterData">
+	
+		UPDATE dream.profile 
+		<set>
+			<if test="line!=null">
+				line=#{line}
+			</if>
+			<if test="career!=null">
+				career=#{career}
+			</if>
+			<if test="calltime!=null">
+				calltime=#{calltime}
+			</if>
+			<if test="qna!=null">
+				qna=#{qna}
+			</if>
+		</set>
+		
+		WHERE m_idx=#{m_idx} AND profile_deldate is null;
+	
+	</update>
+	
+	
+	<!-- 요청글 작성자의 프로필 가져오기 -->
+	<select id="getWriterProfile" parameterType="int" resultType="com.alj.dream.profile.domain.ProfileRequest">
+	select m.m_idx, m.m_nm, m.m_email, m.m_photo, prof.line, loc.loc_nm
+	from member m left join profile prof on m.m_idx=prof.m_idx
+				  left join loc on m.loc_idx=loc.loc_idx
+	where prof.profile_deldate is null
+	and m.m_idx=#{idx}
+	</select>
+	
+ </mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<!--  로그인시 인증 객체 반환을 위한 accountMapper -->
+<!--  어느 인터페이스로 구현해야 할지 몰라서 그냥 xml 문 자체로 설정함 -->
+
+ <mapper namespace="accountMapper">
+
+	<select id="selectbyusername" resultType="security.MemberVO">
+		select * from dream.member where m_email=#{username}
+	</select>
+	
+	
+
+	<select id="selectbyadminname" resultType="security.AdminVO">
+		select* from dream.admin where admin_email=#{username}
+	</select>
+
+ </mapper>

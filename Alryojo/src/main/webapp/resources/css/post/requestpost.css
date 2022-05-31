@@ -1,0 +1,79 @@
+@charset "UTF-8";
+
+
+	
+	article{
+		margin-top: 150px;
+		margin-bottom: 80px;
+		padding-left: 100px;
+		padding-right: 100px;
+	}
+	.post{
+		background-color: #FFD601;
+		height: 250px;
+		width : 70%;
+		margin-left: auto;
+		margin-right: auto;
+		margin-bottom: 30px;
+		padding : 30px 30px 30px 30px; 
+	}
+	#goPostBtn{
+		font-size : 1.1em;
+		font-weight: 200;
+		color : #E1DEE6;
+		width: 120px;
+    	height: 35px;
+	}
+	
+	.post-regdate{
+		float : right;
+		color : #142B6F;
+		font-size: 1.2em;
+	}
+	.post-title{
+		font-size: 2.25em;
+		font-weight: bold;
+		margin : 30px 0px 20px 0px;
+	}
+	.post-cat{
+		font-size: 1.8em;
+		font-weight: 550;
+	}
+	
+	/* 중앙부분 */
+	.rqMemList{
+		width : 70%;
+		margin : 0 auto;
+		padding : 10px 8% 10px 8% ; 
+	}
+	.memTable{
+		border-collapse: separate;
+  		border-spacing: 0 7px;
+  		
+	}
+	.oneMember{
+		padding : 15px 0px 15px 0px;
+		border-bottom: 1pt solid #E1DEE6;
+	}
+	.m_photo{
+		width:110px;
+		height:110px;
+		border-radius: 50%;
+	}
+	#goMentorProfile:hover{
+		border: 3px solid #FFD601;
+	}
+	.rqMname{
+		padding : 0px 5px 0px 15px;
+		font-size: 1.625em;
+		font-weight: bold;	
+	}
+	#goChat{
+		background-color: #142B6F!important;
+		height: 30px;
+		vertical-align: baseline;
+		padding : 0px 6px 0px 6px;		
+	}
+	
+
+	

@@ -1,0 +1,35 @@
+@charset "UTF-8";
+#listTable {
+	border-collapse: separate;
+	border-spacing: 0 30px;
+	text-align: center;
+}
+
+@media ( max-width : 750px) {
+	.subinfo {
+		display: none;
+	}
+}
+
+#globalwrap {
+	
+	margin-top:150px;
+	
+}
+
+.indexes {
+	outline: 1px solid rgb(150, 150, 150);
+	background-color: rgb(197, 197, 197);
+}
+
+#noticesearch {
+	width: 500px;
+}
+
+.pageNum{
+	line-height: 36px;
+	
+}
+#searchBtn{
+	cursor: pointer;
+}

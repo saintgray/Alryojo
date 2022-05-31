@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.alj.dream.request.dao.RequestDao">
+ 
+ 
+ 	<!-- 매칭테이블을 가지고있는 게시물 -->
+ 	<select id="selectRequestPostByMIdx" 
+ 		resultType="com.alj.dream.request.domain.RequestGroup">	
+ 		select distinct 
+ 			p.post_nm, 
+ 			p.post_idx, 
+ 			c.cat_nm, 
+ 			(select p.cat_nm from category p join category c2 on p.cat_idx=c.parent_idx and c2.cat_idx=c.cat_idx) as cat_type,
+ 			(select DATE_FORMAT(p.post_regdate, '%Y-%m-%d'))as post_regdate
+		from 
+			post p join category c on  c.cat_idx=p.cat_idx, dream.match m 
+		where 
+			p.m_idx=#{param1} and p.wanted=#{param2} and m.post_idx=p.post_idx ;
+ 	</select>
+ 	
+ 	<select id="selectRequestPostByPostIdx" 
+ 		resultType="com.alj.dream.request.domain.RequestGroup">	
+ 		select p.post_nm, p.post_idx, c.cat_nm, 
+ 		(select p.cat_nm from category p join category c2 on p.cat_idx=c.parent_idx and c2.cat_idx=c.cat_idx) as cat_type, 
+ 		(select DATE_FORMAT(p.post_regdate, '%Y-%m-%d'))as post_regdate, p.wanted
+		FROM
+		post p join category c 
+		ON c.cat_idx=p.cat_idx
+		WHERE 
+		p.post_idx=#{param1} and p.wanted=#{param2}
+		and p.post_deldate is null AND
+		(SELECT count(*) FROM post p2 JOIN dream.match mat ON p2.post_idx=p.post_idx
+		AND mat.post_idx=p2.post_idx) &gt; 0
+ 	</select>
+ 	
+ 	<!-- 매칭테이블을 가지고있는 회원 -->
+	<select id="selectRequestMemberByPostIdx"
+ 		resultType="com.alj.dream.request.domain.RequestMember">
+ 		
+		SELECT match_idx, post_idx, m_nm, m_photo, match_yn, mem.m_idx
+		<if test='"mentor".equals(arg1)'>
+		  ,pr.line
+		</if>
+		FROM dream.match mat join dream.member mem 
+		
+		<if test='"mentor".equals(arg1)'>
+		 join dream.profile pr
+		</if>
+		ON 
+		
+		<if test='"mentor".equals(arg1)'>
+		mem.m_idx=mat.mentor_idx AND pr.m_idx=mem.m_idx
+		</if>
+		<if test='"mentee".equals(arg1)'>
+		mem.m_idx=mat.mentee_idx
+		</if>
+		WHERE mat.post_idx=#{arg0}
+		AND mem.m_quitdate is null
+		<if test='"mentor".equals(arg1)'>
+		AND pr.profile_deldate is null
+		</if>
+ 	</select> 
+ 
+ 
+ 	
+ 	
+ </mapper>

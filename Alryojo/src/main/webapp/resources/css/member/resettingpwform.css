@@ -1,0 +1,8 @@
+@charset "UTF-8";
+#newPwArea{
+	max-width: 500px;
+	margin-top: 150px;
+}
+#w_pw,#w_repw{
+	min-height: 40px;
+}

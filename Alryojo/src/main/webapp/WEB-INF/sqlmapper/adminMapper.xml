@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.alj.dream.admin.dao.AdminDao">
+ 
+ 
+ 	<select id="selectByIdx" resultType="com.alj.dream.member.domain.MyInfo">
+		SELECT admin_email as m_info, admin_nm as m_nm, 
+		photo as m_photo from dream.admin where admin_idx=#{arg0}
+	</select>
+	
+	
+	<update id="editAdmin">
+	
+		UPDATE admin
+		SET
+		<if test="m_nm!=null">
+			admin_nm=#{m_nm}
+		</if>
+		<if test="m_photo!=null">
+			photo=#{m_photo}
+		</if>
+		<if test="m_password!=null">
+			admin_password=#{m_password}
+		</if>
+		
+		WHERE admin_idx=#{m_idx}
+		
+	
+	</update>
+	
+	
+	<insert id="insertAdmin" parameterType="com.alj.dream.admin.domain.Admin">
+		INSERT into dream.admin(admin_email,admin_nm,admin_password)
+		VALUES
+		(#{admin_email},#{admin_nm},#{admin_password})
+	</insert>
+ 	
+ 	
+	
+	
+ </mapper>
+ 

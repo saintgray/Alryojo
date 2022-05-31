@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.alj.dream.category.dao.CategoryDao">
+ 
+ 
+ 	<!-- <select id="getChildCategory" resultType="com.alj.dream.category.domain.ChildCategory">
+		SELECT child.cat_idx, child.cat_nm FROM category parent JOIN category child ON parent.cat_nm=child.cat_type WHERE parent.cat_idx IN
+	    <foreach collection="list" item="cat_idx" open="(" close=")" separator=",">
+	        #{cat_idx}
+	    </foreach>
+	</select> -->
+	
+	
+	<select id="getChildCategory" resultType="com.alj.dream.category.domain.ChildCategory">
+	
+	
+		SELECT child.cat_idx, child.cat_nm,  (SELECT count(*) from category cp JOIN category cc 
+											  ON cp.cat_idx=cc.parent_idx 
+											  WHERE cp.cat_nm=child.cat_nm) AS childNodeCount
+											  
+		FROM category parent JOIN category child 
+		ON parent.cat_idx=child.parent_idx
+		
+		WHERE
+		<if test="arg0==null">
+			 parent.cat_idx=(SELECT cat_idx FROM category WHERE cat_nm='취미')
+		</if>
+		<if test="arg0!=null">
+			 parent.cat_idx IN
+			<foreach collection="list" item="cat_idx" open="(" close=")" separator=",">
+				#{cat_idx}
+			</foreach>
+		</if>
+		AND child.cat_deldate is null
+		
+	</select>
+	
+	
+	
+	
+	<!-- 해당 분야 포함 그 밑에 존재하는 모든 카테고리를 추출 -->
+	<select id="getAllChildrens" resultType="com.alj.dream.category.domain.Category">
+		<!-- 
+			 with recursive
+			 with : 가상테이블 명시
+			 recursive : 재귀 호출 사용
+			  규칙 : 서브 쿼리 내에서 union(all)이 사용되어야 한다.
+			  하나 이상의 Non-recursive 문장이 포함되어 있어야 한다. 이는 anchor 역할을 하며 이 미만의 계층구조로 연결되어 있는 데이터를 추출함
+		 -->
+		WITH RECURSIVE c3 (cat_idx, cat_nm, parent_idx) AS
+		(
+		SELECT c1.cat_idx, c1.cat_nm, c1.parent_idx
+		FROM
+		category c1
+		WHERE c1.cat_idx=#{arg0}
+
+		UNION ALL
+
+		SELECT c2.cat_idx, c2.cat_nm, c2.parent_idx
+		FROM category c2
+		JOIN c3 ON c2.parent_idx=c3.cat_idx
+
+		)
+		select * from c3		
+	</select>
+	
+	
+	
+	
+	<select id="selectAll" resultType="com.alj.dream.category.domain.CategoryInfo">
+	
+		SELECT child.cat_idx as child_idx, child.cat_nm, parent.cat_idx as parent_idx
+											  
+		FROM category parent right JOIN category child 
+		ON parent.cat_idx=child.parent_idx
+		
+		WHERE child.cat_deldate is null and parent.cat_deldate is null
+		
+		
+	</select>
+	
+	<select id="getSiblings" resultType="com.alj.dream.category.domain.ChildCategory">
+	SELECT c.cat_idx, c.cat_nm, (SELECT count(*) from category cp JOIN category cc 
+											  ON cp.cat_idx=cc.parent_idx 
+											  WHERE cp.cat_nm=c.cat_nm) AS childNodeCount  
+	FROM category c JOIN category p 
+	ON c.parent_idx=p.cat_idx 
+	WHERE p.cat_idx=(SELECT p2.cat_idx FROM category c1 JOIN category p2 ON c1.parent_idx=p2.cat_idx WHERE c1.cat_idx=#{arg0})
+	AND  c.cat_deldate is null
+
+	
+	
+	
+	</select>
+	
+	
+	
+	<select id="getCatIdxByName" resultType="String">
+		Select cat_idx from category where cat_nm=#{arg0}
+	
+	</select>
+	
+	
+	<select id="getParentInfo" resultType="com.alj.dream.category.domain.Category">
+		select p.cat_idx, p.cat_nm from category c join category p on c.parent_idx=p.cat_idx where c.cat_idx=#{arg0};
+	</select>
+	
+
+	
+	<!-- 카테고리 삭제와 수정, 추가 -->
+	<update id="editCategory">
+		UPDATE category set cat_nm=#{arg0} where cat_idx=#{arg1}
+	</update>
+	
+	
+	<update id="deleteCategory">
+		
+		UPDATE category set cat_deldate=current_timestamp where cat_idx IN
+		<foreach collection="list" open="(" separator="," close=")" item="category">
+			#{category.cat_idx}
+		</foreach>
+	</update>
+	
+	
+	
+	<insert id="register" useGeneratedKeys="true" keyProperty="cat_idx" parameterType="com.alj.dream.category.domain.Category">
+		INSERT INTO category(cat_nm,parent_idx) values(#{cat_nm},#{parent_idx})
+
+	</insert>
+	
+	
+	
+	
+ </mapper>
+ 

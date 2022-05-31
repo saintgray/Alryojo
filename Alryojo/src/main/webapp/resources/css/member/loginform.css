@@ -1,0 +1,51 @@
+@charset "UTF-8";
+
+#loginglobalwrap{
+	margin-top:100px;
+	
+	width:370px;
+	
+}
+#btnarea{
+	padding:10px;
+	text-align: center;
+}
+.warning{
+	font-size: 13px;
+	color: red;
+	font-weight: light;
+	height:20px;
+}
+#loading{
+	width: 45px;
+	display: block;
+	margin:0 auto;
+}
+#auth_warning{
+	min-height: 50px;
+    line-height: 50px;
+}
+#auth_warning::before{
+	outline: 1px solid rgba(59,59,59, 0.15);
+	content:'';
+	display: block;
+	margin-top: 30px;
+	
+	
+}
+
+label[for=autoLogin], #forgetMe{
+	
+	    font-size: 12px;
+	    position: relative;
+	    bottom: 2px;
+	    color: rgb(59,59,59);
+	    font-weight: 400;
+	    cursor:pointer;
+	
+}
+#autoLogin{
+	
+	cursor: pointer;
+}
+

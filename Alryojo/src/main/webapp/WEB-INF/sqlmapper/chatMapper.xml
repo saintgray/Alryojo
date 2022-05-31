@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+  <mapper namespace="com.alj.dream.chat.dao.ChatDao">
+ 
+	<insert id="insertChat"
+ 			parameterType="com.alj.dream.chat.domain.Chat"
+ 			>
+ 	INSERT INTO dream.chat (match_idx, m_sender, m_reciever, message)
+ 	values(#{match_idx}, #{m_sender}, #{m_reciever}, #{message})
+ 	</insert>
+ 	
+ 	
+ 	<select id="selectChatRoomByIdx"
+ 			resultType="com.alj.dream.chat.domain.ChatRoom">
+ 	select
+		m.match_idx, m.match_yn, 
+		mem.m_idx, mem.m_nm, mem.m_photo,
+		c.cat_nm,  (select p.cat_nm from category p join category c2 on p.cat_idx=c.parent_idx and c2.cat_idx=c.cat_idx) as cat_type,
+		mem.m_idx as reciever_idx
+	from 
+		dream.match m join member mem 
+		
+		<if test='"mentor".equals(param1)'>
+			on m.mentee_idx = mem.m_idx,
+		</if>
+		<if test='"mentee".equals(param1)'>
+			on m.mentor_idx = mem.m_idx,
+		</if>
+		post p join category c on c.cat_idx=p.cat_idx
+	where 
+		m.post_idx = p.post_idx and
+		
+		<if test='param1 eq "mentee"'>
+			mentee_idx=#{param2} and
+			mentee_outyn ='N'
+		</if>
+		<if test='param1 eq "mentor"'>
+			mentor_idx=#{param2} and
+			mentor_outyn ='N'
+		</if>
+			AND m.post_idx = p.post_idx 
+ 	</select>
+ 	
+ 	<select id="selectChatByMatchidx"
+ 			resultType="com.alj.dream.chat.domain.Chat">
+ 	select 
+ 		match_idx, message, (select concat((select MONTH(sent)),'월 ',(select DAY(sent)),'일',' ',(select time_format(sent, '%H:%i'))))as sent, m_sender, m_reciever
+ 	from 
+ 		chat 
+ 	where 
+ 		match_idx = #{matchidx} order by sent asc;
+	
+ 	</select>
+ 	
+ 	
+</mapper>

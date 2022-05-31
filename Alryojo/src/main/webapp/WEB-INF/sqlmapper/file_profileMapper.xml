@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ 
+ <mapper namespace="com.alj.dream.file_profile.dao.ProfileFilesDao">
+ 
+ 	<insert id="insertProfileFiles" parameterType="java.util.List">
+	    INSERT INTO dream.file_profile
+		    (file_nm, profile_idx,file_exet,file_size,file_originnm)
+	    VALUES
+		    
+	    <foreach collection="list" item="fileinfo" separator=",">
+		    (
+		        #{fileinfo.file_nm},
+		        #{fileinfo.profile_idx},
+		        #{fileinfo.file_exet},
+		        #{fileinfo.file_size},
+		        #{fileinfo.file_originnm}
+		    )
+	    </foreach>
+   
+	</insert>
+	
+	<!-- 2022-02-08 -->
+	<!-- 해당 프로필 번호를 profile_idx로 하는 file_profile 테이블의 모든 데이터를 가져오는 쿼리 -->
+	<select id="getFiles" resultType="com.alj.dream.file_profile.domain.FileInfo">
+		SELECT fp.file_nm, fp.profile_idx, fp.file_size, fp.file_exet, fp.file_originnm
+		FROM file_profile fp JOIN dream.profile prof
+		on fp.profile_idx=prof.profile_idx
+		WHERE prof.profile_deldate is null AND prof.profile_idx=#{arg0} AND fp.file_deldate is null;
+	
+	</select>
+	
+	<!-- 파일 삭제 -->
+	<update id="deleteFile">
+		UPDATE file_profile
+		SET file_deldate=CURRENT_TIMESTAMP
+		WHERE file_nm=#{arg0}
+	</update>
+	
+	
+	<!-- 삭제한 파일의 행들을 모두 가져온다 -->
+	<select id="getDeletedFiles" resultType="String">
+		SELECT fp.file_nm
+		FROM file_profile fp
+		WHERE fp.file_deldate is not null
+	</select>
+	
+ 	
+ 
+ </mapper>

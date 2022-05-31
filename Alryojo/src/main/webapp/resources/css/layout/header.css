@@ -1,0 +1,133 @@
+@charset "UTF-8";
+
+ 	#headerwrap {
+      width: 80%;
+      margin: 0px auto;
+      padding-top: 10px;
+    }
+
+    
+    ul li img {
+      display: inline-block;
+    }
+    #first {
+      width: 100%;
+    }
+   
+    #search {
+      width: 300px;
+      margin-left:15px;
+      
+    }
+    #search img {
+      background-color: 	white;  
+    }
+    #search input::placeholder {
+      font-size: 15px;
+      color: rgb(187, 187, 187);
+      font-weight: 510;
+    }
+    .sub{
+      display: none;
+    }
+
+    @media (max-width: 995px) {
+
+      .sub{
+        display: flex;
+      }
+      #search {
+        width: 100%;
+        margin-top: 15px;
+        outline: 2px solid #142B6F;
+        border-radius: 5px;
+      }
+
+      /*display : flex 를 강제로 지우기 위해 사용*/
+      #subnav {
+        display: none !important;
+      }
+
+      /*배너를 중앙 정렬하기 위해 사용*/
+      #first {
+        justify-content: space-between;
+      }
+
+
+    }
+    
+ 
+   .container{
+     min-width: 290px;
+     overflow-x: hidden;
+   }
+
+    #subnav {
+      margin-left: auto;
+      text-align: center;
+    }
+
+    #subnav .list {
+      margin: 0 5px;
+      display: inline-block;
+      min-width: 70px;
+    }
+
+    #subnav span, .bi-arrow-repeat {
+      line-height: 40px;
+    }
+
+    #register {
+      background-color:  #142B6F;
+      border-radius: 5px;
+      margin-left: 15px;
+      outline: 2px solid rgb(249, 249, 249);
+      font-weight: bold;
+      color: white;
+      width: 90px;
+    }
+
+    #register:hover {
+      background-color: #051c5a;
+    }
+
+    #logo,
+    #subnav .inner, 
+    .sub,
+    #myinfo {
+      cursor: pointer;
+    }
+
+    img {
+
+      vertical-align: top;
+    }
+    #myPhoto{
+    	cursor:pointer;
+    	width:42px;
+    	height: 42px;
+   	    border-radius: 50%;
+   		border: 1px solid #FCA106;
+    }
+
+    .inner {
+
+      height: 40px;
+    }
+    #menutab{
+    	font-size:13px;
+    }
+    #menutab #myinfo{
+    	color: #142B6F;
+    	font-weight:bold;
+    }
+    #menutab .fi {
+ 		line-height: 3.3;   
+    
+    }
+    #menutab span{
+    	cursor: pointer;
+    }
+    .offcanvas-body *{
+    	cursor:pointer;
+    }

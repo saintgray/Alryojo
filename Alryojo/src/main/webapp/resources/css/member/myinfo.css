@@ -1,0 +1,97 @@
+@charset "UTF-8";
+	#controlarea{
+	
+		margin-top:150px;
+	}
+	#controlarea::after{
+	    margin: 0 auto;
+		content:'';
+		display: block;
+		outline: 1px solid #FCA10642;
+		width: 50%;
+	}
+	
+	#controlbtn{
+		margin-top: 20px;
+		margin-bottom:20px;
+	}
+
+	#profileshotarea{
+		position: relative;
+	}
+	#myprofile{
+		width:200px;
+		height:200px;
+		border-radius: 15px;
+    	border: 2px solid rgba(59,59,59,0.1);
+	}
+	#infosarea{
+		margin-top: 250px;
+		min-width: 520px;
+	}
+	
+	#cameraicon{
+	    position: absolute;
+	    right: 20px;
+	    bottom: 5px;
+	    cursor: pointer;
+	}
+	
+	.fi-rr-camera:before {
+	    content: "\f178";
+	    font-size: 25px;
+	    background-color: white;
+	    padding: 7px;
+	    border-radius: 15px 0 15px 0;
+	    border: 2px solid rgba(59,59,59,0.1);
+	}
+	#interestarea{
+		min-height: 100px;
+		background-color: rgb(197,197,197);
+		border-radius: 15px;
+		max-width: 600px;
+		
+	}
+	#addCat{
+		width:50px;
+		height:50px;
+		cursor: pointer;
+	}
+	.bi-wrench{
+		font-size: 14px;
+		cursor:pointer;
+	}
+	#msgarea{
+		color:#FFD601;
+		font-weight:light;
+	}
+	#securityinfos input{
+		width:400px;
+	}
+	#editPwBtn{
+		width:135px;
+	}
+	.warning{
+		color: red;
+		font-size: 13px;
+	}
+	.u_txt_chk{
+	
+		text-decoration: underline;
+		color:#FCA106;
+		
+	}
+	#quitguide{
+	    font-size: 13px;
+	    margin-bottom: 10px;
+	    padding-left: 10px;
+	}
+	#quitlink{
+		color:#FCA106;
+		cursor: pointer;
+	}
+	
+	#infos{
+	
+		margin-bottom:100px;
+	}
