@@ -1,4 +1,3 @@
-
 # Created by https://www.toptal.com/developers/gitignore/api/eclipse,java
 # Edit at https://www.toptal.com/developers/gitignore?templates=eclipse,java
 
@@ -104,4 +103,6 @@ hs_err_pid*
 .project
 .project
 .classpath
-jspProject/MVC/build/classes/controller/Overview
+
+# Contributor's Server Path .xml file
+serverpath.xml
