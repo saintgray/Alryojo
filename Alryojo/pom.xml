@@ -44,45 +44,27 @@
 		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${org.slf4j-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${org.slf4j-version}</version>
-			<scope>runtime</scope>
+			<version>1.7.21</version>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${org.slf4j-version}</version>
-			<scope>runtime</scope>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.1.7</version>
 		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.15</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.mail</groupId>
-					<artifactId>mail</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>javax.jms</groupId>
-					<artifactId>jms</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.sun.jdmk</groupId>
-					<artifactId>jmxtools</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.sun.jmx</groupId>
-					<artifactId>jmxri</artifactId>
-				</exclusion>
-			</exclusions>
-			<scope>runtime</scope>
-		</dependency>
+
+		<!-- <dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-api</artifactId> 
+			<version>${org.slf4j-version}</version> </dependency> <dependency> <groupId>org.slf4j</groupId> 
+			<artifactId>jcl-over-slf4j</artifactId> <version>${org.slf4j-version}</version> 
+			<scope>runtime</scope> </dependency> <dependency> <groupId>org.slf4j</groupId> 
+			<artifactId>slf4j-log4j12</artifactId> <version>${org.slf4j-version}</version> 
+			<scope>runtime</scope> </dependency> <dependency> <groupId>log4j</groupId> 
+			<artifactId>log4j</artifactId> <version>1.2.15</version> <exclusions> <exclusion> 
+			<groupId>javax.mail</groupId> <artifactId>mail</artifactId> </exclusion> 
+			<exclusion> <groupId>javax.jms</groupId> <artifactId>jms</artifactId> </exclusion> 
+			<exclusion> <groupId>com.sun.jdmk</groupId> <artifactId>jmxtools</artifactId> 
+			</exclusion> <exclusion> <groupId>com.sun.jmx</groupId> <artifactId>jmxri</artifactId> 
+			</exclusion> </exclusions> <scope>runtime</scope> </dependency> -->
 
 		<!-- @Inject -->
 		<dependency>
@@ -268,7 +250,7 @@
 			<version>20160810</version>
 		</dependency>
 
-	
+
 		<!-- 수업시간에 배운걸로 하는 채팅 관련 라이브러리 -->
 		<!-- json으로 데이터를 내보내는 -->
 		<dependency>
@@ -276,12 +258,12 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.11.0</version>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
 		<dependency>
-		    <groupId>com.google.code.gson</groupId>
-		    <artifactId>gson</artifactId>
-		    <version>2.8.6</version>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.8.6</version>
 		</dependency>
 
 
@@ -297,17 +279,17 @@
 			<artifactId>spring-context-support</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
-		
-		
-		
+
+
+
 		<!-- Amazone S3 JAA SDK -->
 		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3 -->
 		<dependency>
-		    <groupId>com.amazonaws</groupId>
-		    <artifactId>aws-java-sdk-s3</artifactId>
-		    <version>1.12.131</version>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-s3</artifactId>
+			<version>1.12.131</version>
 		</dependency>
-		
+
 
 
 

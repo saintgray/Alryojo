@@ -1,5 +1,8 @@
 package scheduler;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class ServerPath {
 	
 	public String profileFilesPath;
