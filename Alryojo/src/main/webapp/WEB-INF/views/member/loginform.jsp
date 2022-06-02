@@ -19,7 +19,7 @@
 		</div>
 		<div class="container d-flex flex-wrap flex-column justify-content-center p-2" id="insertarea">
 		
-			<form action="${pageContext.request.contextPath}/member/login" method="post">
+			<form action="${pageContext.request.contextPath}/login" method="post">
 				
 				<div class="input-group">
 					<span class="input-group-text" style="background-color: #FFF"><i class="bi bi-person-fill fs-4"></i></span>
