@@ -30,7 +30,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		if(header ==null || !header.startsWith("token")) {
 			
 		}
-		return null;
+		return getAuthenticationManager().authenticate(auth);
 	}
 
 	@Override
