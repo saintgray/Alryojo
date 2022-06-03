@@ -1,89 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
+<beans:beans xmlns="http://www.springframework.org/schema/security" 
+	xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:security="http://www.springframework.org/schema/security"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 	<context:annotation-config/>
 	
-		<bean id="accountservice" class="security.AccountService"></bean>
-		
-		<bean id="loginsuccesshandler" class="security.LoginSuccessHandler"></bean>
-		
-		<bean id="accessdeniedhandler" class="security.UserAccessDeniedHandler"></bean>
-		
-		<bean id="loginfailurehandler" class="security.LoginFailureHandler"></bean>
-			
-		<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+	<beans:bean id="accountservice" class="security.AccountService"></beans:bean>
 	
-	<security:http>
+	<beans:bean id="loginsuccesshandler" class="security.LoginSuccessHandler"></beans:bean>
+	
+	<beans:bean id="accessdeniedhandler" class="security.UserAccessDeniedHandler"></beans:bean>
+	
+	<beans:bean id="loginfailurehandler" class="security.LoginFailureHandler"></beans:bean>
+		
+	<beans:bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></beans:bean>
+	
+	<beans:bean id="tokenProvider" class="security.TokenProvideController"></beans:bean>
+		
+	
+	<global-method-security pre-post-annotations="enabled"/>
+	
+	<http pattern="/login" security="none"></http>
+	<http pattern="/signup" security="none"></http>
+	
+	<http pattern="/**" entry-point-ref="restAuthenticationEntryPoint" create-session="stateless">
+		<csrf disabled="true"/>
+		
+	</http>
+	
+	<beans:bean id="jwtAuthenticationFileter" class="security.JwtAuthenticationFilter">
+		<beans:property name="authenticationManager" ref="authenticationManager"/>
+		<beans:property name="authenticationSuccessHandler" ref="loginsuccesshandler" />
+	</beans:bean>
+	
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider ref="jwtAuthenticationProvider"></authentication-provider>
+	</authentication-manager>
+	
+	
+	<!-- <security:http>
 	
 	 	<security:csrf disabled="true"/>	
 	 	
-	 	<!-- 익명사용자(인증되지 않은 사용자)도 접근할 수 있는 url -->
+	 	익명사용자(인증되지 않은 사용자)도 접근할 수 있는 url
 		<security:intercept-url pattern="/member/loginform" access="permitAll"/>
 		<security:intercept-url pattern="/termsform" access="permitAll"/>
 		<security:intercept-url pattern="/register" access="permitAll"/>
 		<security:intercept-url pattern="/chk_email" access="permitAll"/>
 		
-		<!-- SUPERADMIN 이라는 권한을 가진 사람만 = 슈퍼관리자만 접근 가능한 경로 -->
+		SUPERADMIN 이라는 권한을 가진 사람만 = 슈퍼관리자만 접근 가능한 경로
 		<security:intercept-url pattern="/superadmin/**" access="hasRole('SUPERADMIN')"/>
 		
-		<!-- ADMIN 이라는 권한을 가진 사람만 = 관리자만   접근 가능한 경로 --> 
+		ADMIN 이라는 권한을 가진 사람만 = 관리자만   접근 가능한 경로 
 		<security:intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/> 
 		
-		<!-- GENERAL 이라는 권한을 가진 사람만 = 일반 회원만    접근 가능한 경로 -->
+		GENERAL 이라는 권한을 가진 사람만 = 일반 회원만    접근 가능한 경로
 		<security:intercept-url pattern="/member/**" access="hasRole('GENERAL')"/>
 		<security:intercept-url pattern="/myinfo" access="isAuthenticated()"/>
 		<security:intercept-url pattern="/post/**" access="hasRole('GENERAL')"/>
-		
-		
-		<security:intercept-url pattern="/qna/**" access="isAuthenticated()"/> 
-
-		
-		<!-- 권한이 없는 사용자가 해당 url 을 요청시 처리하는 handler 클래스 -->
+		<security:intercept-url pattern="/qna/**" access="isAuthenticated()"/> 		
+		권한이 없는 사용자가 해당 url 을 요청시 처리하는 handler 클래스
 		<security:access-denied-handler ref="accessdeniedhandler"/>
+		로그인 페이지 url 경로 : loginform,  명시하지 않을 시 스프링에서 제공하는 기본 로그인 페이지로 이동
+		스프링에게 로그인 처리(인증처리) 를 요청할 url : login-processing-url
+		authentication-success-handler-ref : 인증에 성공시 처리하는 handler 클래스 
+		authentication-failure-handler-ref : 인증에 실패시 처리하는 handler 클래스 (AuthenticationException 발생 시)
 		
 		
-		<!-- 로그인 페이지 url 경로 : loginform,  명시하지 않을 시 스프링에서 제공하는 기본 로그인 페이지로 이동 -->
-		<!-- 스프링에게 로그인 처리(인증처리) 를 요청할 url : login-processing-url -->
-		<!-- authentication-success-handler-ref : 인증에 성공시 처리하는 handler 클래스  -->
-		<!-- authentication-failure-handler-ref : 인증에 실패시 처리하는 handler 클래스 (AuthenticationException 발생 시) -->
 		<security:form-login login-page="/member/loginform?intercepted=true"
 							 login-processing-url="/login"
-							 
-							 
 							 authentication-success-handler-ref="loginsuccesshandler" 
 							 authentication-failure-handler-ref="loginfailurehandler"/>
-		
-		<!-- 자동 로그인 쿠키의 만료시간은 자유롭게 설정할 수 있으나 여기에서는 604800 초, 즉  1주일 이라 하겠다. -->
+							 
+							 
+							 
+							 
+		자동 로그인 쿠키의 만료시간은 자유롭게 설정할 수 있으나 여기에서는 604800 초, 즉  1주일 이라 하겠다.
 		<security:remember-me data-source-ref="dataSource" token-validity-seconds="604800"/>
 		<security:logout logout-url="/logout" 
 						 invalidate-session="true"
 						 logout-success-url="/"
 						 delete-cookies="JSESSIONID,remember-me"/>	
-						 <!-- 로그아웃시 remember-me 쿠키를 삭제하여 데이터베이스의 persistent_logins 내 해당 유저의 로그인 기록도 없앤다 -->	
-						 
-				 
+						 로그아웃시 remember-me 쿠키를 삭제하여 데이터베이스의 persistent_logins 내 해당 유저의 로그인 기록도 없앤다	
 	</security:http>
-	
-	<security:authentication-manager>
-		
-		
+	 -->
+	<!-- <security:authentication-manager>	
 		<security:authentication-provider user-service-ref="accountservice">
 		 	<security:password-encoder ref="bcryptPasswordEncoder"/>
 		</security:authentication-provider>
-		
-	
-	</security:authentication-manager>
-	
-	
-	
-	
-	
-	
-	
-		
-</beans>
+	</security:authentication-manager> -->	
+</beans:beans>

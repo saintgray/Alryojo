@@ -15,9 +15,6 @@ public class AccountDetails extends User{
 	private String m_type;
 	private String m_quitdate;
 	
-	
-	
-
 	public AccountDetails(String username, String password, boolean enabled, boolean accountNonExpired,
 			boolean credentialsNonExpired, boolean accountNonLocked,
 			Collection<? extends GrantedAuthority> authorities, String photo, String name, String m_type,String m_idx,String m_quitdate) {
@@ -28,10 +25,7 @@ public class AccountDetails extends User{
 		this.name=name==null?username.substring(0,username.indexOf('@')):name;
 		this.m_type=m_type;
 		this.m_idx=m_idx;
-		this.m_quitdate=m_quitdate;
-		
-	
-		
+		this.m_quitdate=m_quitdate;	
 	}
 	
 	// 관리자의 AccountDetails 객체 생성

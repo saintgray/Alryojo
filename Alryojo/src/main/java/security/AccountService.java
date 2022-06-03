@@ -68,19 +68,11 @@ public class AccountService implements UserDetailsService {
 			} else if (vo.getM_blacklist().equals("Y")) {
 				enabled = false;
 			}
-
-			System.out.println("enabled >>>");
-			System.out.println(enabled);
 			userDetails = new AccountDetails(vo.getM_email(), vo.getM_password(), enabled, true, true, true,
 					getRoleList(vo.getRole()), vo.getM_photo(), vo.getM_nm(), "mentee", vo.getM_idx(),
 					vo.getM_quitdate());
 		}
-
-		System.out.println("반환하는 AccountDetails 객체의 정보입니다.");
-		System.out.println(userDetails);
-		System.out.println(userDetails.getPassword());
+		
 		return userDetails;
-
 	}
-
 }

@@ -226,6 +226,18 @@
 			<version>${org.springframework-version}</version>
 		</dependency>
 
+		<!-- and for jwt Authorization -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-jwt</artifactId>
+			<version>1.0.9.RELEASE</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
 
 		<!-- Web Socket -->
 
@@ -251,8 +263,8 @@
 		</dependency>
 
 
-		<!-- 수업시간에 배운걸로 하는 채팅 관련 라이브러리 -->
-		<!-- json으로 데이터를 내보내는 -->
+
+		<!-- jackson -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>

@@ -15,8 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.DefaultRedirectStrategy;
-import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
@@ -51,7 +49,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 		// 1. 인증이 필요한 페이지를 사용하려다 로그인페이지로 들어와서 로그인에 성공한 케이스
 		// 2. 직접 로그인 창을 클릭해서 로그인에 성공한 케이스
 		System.out.println("+ print RequeestCache rc");
-		logger.info(rc.getRequest(request, response).toString());
+		// logger.info(rc.getRequest(request, response).toString());
 		if (rc.getRequest(request, response) == null) {
 			// 2번 경우
 			routerPath = "/";
@@ -80,17 +78,22 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 			if (logininfo.getM_quitdate() != null) {
 				System.out.println("called by loginsuccessHandler >> 탈퇴한 유저입니다");
 				msg = "*탈퇴한 계정으로는 로그인 할 수 없습니다";
-				msg = URLEncoder.encode(msg, "UTF-8");
 				// 세션 무효화
 				request.getSession().invalidate();
 				// 쿠키삭제
-				for (Cookie cookie : request.getCookies()) {
-					if (cookie.getName().equals("remember-me")) {
-						cookie.setMaxAge(0);
-						response.addCookie(cookie);
-					} else if (cookie.getName().equals("JSESSIONID")) {
-						cookie.setMaxAge(0);
-						response.addCookie(cookie);
+//				logger.info("+ is cookies null?");
+//				logger.info(String.valueOf(request.getCookies()==null));
+//				logger.info("+ is request null?");
+//				logger.info(String.valueOf(request==null));
+				if(request.getCookies()!=null) {
+					for (Cookie cookie : request.getCookies()) {
+						if (cookie.getName().equals("remember-me")) {
+							cookie.setMaxAge(0);
+							response.addCookie(cookie);
+						} else if (cookie.getName().equals("JSESSIONID")) {
+							cookie.setMaxAge(0);
+							response.addCookie(cookie);
+						}
 					}
 				}
 				SecurityContext context = SecurityContextHolder.getContext();
@@ -111,15 +114,14 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 		}
 //		System.out.println("보내는 페이지:".concat(routerPath));
 //		rs.sendRedirect(request, response, routerPath);
-
+		// response.setHeader("Content-Type", "text/html; charset=UTF=8");
+		
 		if (msg == null) {
 			// 주의 : key 값을 camel 법으로 작성해도 브라우저는 모두 소문자로 받기 때문에 
 			// front 단에서는 lowerCase에 대하여 분기해 주어야 한다.
 			response.setHeader("routerPath", routerPath);
 		} else {
-			response.setHeader("msg", msg);
+			response.setHeader("msg", URLEncoder.encode(msg, "UTF-8"));
 		}
-
 	}
-
 }

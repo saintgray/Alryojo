@@ -30,6 +30,9 @@
 		<constructor-arg ref="sqlSessionFactory" />
 	</bean>
 	
+	<context:property-placeholder location="WEB-INF/classes/jwt.properties"/>
+	
+	
 	
 	
 
