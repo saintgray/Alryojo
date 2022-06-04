@@ -1,11 +1,16 @@
 package com.alj.dream.member.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alj.dream.member.domain.PageRequest;
 import com.alj.dream.member.service.MemberListService;
@@ -41,6 +46,12 @@ public class MemberListController {
 		
 		return "admin/member/membermain";
 		
+	}
+	
+	@PostMapping("/admin/adminTest")
+	@ResponseBody
+	public Map<String,Object> test(){
+		return new HashMap<String, Object>();
 	}
 	
 

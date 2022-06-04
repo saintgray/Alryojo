@@ -18,14 +18,13 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.DefaultClock;
 
-@Component
 public class JwtUtil {
 	
 	@Value("${jwt.key}")
 	private String secret;
-	@Value("${jwt.expiresInMillisec}")
+	@Value("${jwt.token.expiresInMillisec}")
 	private long expiration;
-	@Value("${jwt.token.cookie.expiresInMillisec}")
+	@Value("${jwt.token.cookie.expiresInsec}")
 	private int cookieExpiration;
 	@Value("${jwt.token.cookie.name}")
 	private String cookieName;
@@ -59,7 +58,7 @@ public class JwtUtil {
 	
 	// 토큰으로 부터 유저 아이디 추출
 	public String getUsernameFromToken(String token) {
-		return getClaimFromToken(token,Claims::getId);
+		return getClaimFromToken(token,Claims::getSubject);
 	}
 	private <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
 		final Claims claims=getAllClaimsFromToken(token);

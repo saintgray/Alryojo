@@ -18,78 +18,40 @@
 		
 	<beans:bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></beans:bean>
 	
-	<beans:bean id="tokenProvider" class="security.TokenProvideController"></beans:bean>
-		
+	<beans:bean id="jwtUtil" class="security.JwtUtil"></beans:bean>
+	
+	<beans:bean id="jwtRequestFilter" class="security.JwtRequestFilter"></beans:bean>
+	
+	<beans:bean id="restAuthenticationEntryPoint" class="security.JwtAuthenticationEntryPoint"></beans:bean>
+	
+	<beans:bean id="tokenProvider" class="security.TokenProvider"></beans:bean>
+	
+	<!-- <beans:bean id="tokenProvider" class="com.alj.dream.auth.controller.TokenProvideController"></beans:bean> -->
 	
 	<global-method-security pre-post-annotations="enabled"/>
 	
-	<http pattern="/login" security="none"></http>
+	<!-- <http pattern="/login" security="none"></http> -->
 	<http pattern="/signup" security="none"></http>
+	
 	
 	<http pattern="/**" entry-point-ref="restAuthenticationEntryPoint" create-session="stateless">
 		<csrf disabled="true"/>
-		
+		<custom-filter ref="jwtRequestFilter" before="FIRST"/>
+		<intercept-url pattern="/locations" access="isAuthenticated()"/>
+		<intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>
+		<form-login login-processing-url="/login" 
+		authentication-failure-handler-ref="loginfailurehandler"
+		authentication-success-handler-ref="loginsuccesshandler"/>
 	</http>
 	
-	<beans:bean id="jwtAuthenticationFileter" class="security.JwtAuthenticationFilter">
-		<beans:property name="authenticationManager" ref="authenticationManager"/>
-		<beans:property name="authenticationSuccessHandler" ref="loginsuccesshandler" />
-	</beans:bean>
 	
-	<authentication-manager alias="authenticationManager">
-		<authentication-provider ref="jwtAuthenticationProvider"></authentication-provider>
+	<authentication-manager>
+		<authentication-provider user-service-ref="accountservice">
+			<password-encoder ref="bcryptPasswordEncoder"/>
+		</authentication-provider>
+		
 	</authentication-manager>
 	
 	
-	<!-- <security:http>
 	
-	 	<security:csrf disabled="true"/>	
-	 	
-	 	익명사용자(인증되지 않은 사용자)도 접근할 수 있는 url
-		<security:intercept-url pattern="/member/loginform" access="permitAll"/>
-		<security:intercept-url pattern="/termsform" access="permitAll"/>
-		<security:intercept-url pattern="/register" access="permitAll"/>
-		<security:intercept-url pattern="/chk_email" access="permitAll"/>
-		
-		SUPERADMIN 이라는 권한을 가진 사람만 = 슈퍼관리자만 접근 가능한 경로
-		<security:intercept-url pattern="/superadmin/**" access="hasRole('SUPERADMIN')"/>
-		
-		ADMIN 이라는 권한을 가진 사람만 = 관리자만   접근 가능한 경로 
-		<security:intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/> 
-		
-		GENERAL 이라는 권한을 가진 사람만 = 일반 회원만    접근 가능한 경로
-		<security:intercept-url pattern="/member/**" access="hasRole('GENERAL')"/>
-		<security:intercept-url pattern="/myinfo" access="isAuthenticated()"/>
-		<security:intercept-url pattern="/post/**" access="hasRole('GENERAL')"/>
-		<security:intercept-url pattern="/qna/**" access="isAuthenticated()"/> 		
-		권한이 없는 사용자가 해당 url 을 요청시 처리하는 handler 클래스
-		<security:access-denied-handler ref="accessdeniedhandler"/>
-		로그인 페이지 url 경로 : loginform,  명시하지 않을 시 스프링에서 제공하는 기본 로그인 페이지로 이동
-		스프링에게 로그인 처리(인증처리) 를 요청할 url : login-processing-url
-		authentication-success-handler-ref : 인증에 성공시 처리하는 handler 클래스 
-		authentication-failure-handler-ref : 인증에 실패시 처리하는 handler 클래스 (AuthenticationException 발생 시)
-		
-		
-		<security:form-login login-page="/member/loginform?intercepted=true"
-							 login-processing-url="/login"
-							 authentication-success-handler-ref="loginsuccesshandler" 
-							 authentication-failure-handler-ref="loginfailurehandler"/>
-							 
-							 
-							 
-							 
-		자동 로그인 쿠키의 만료시간은 자유롭게 설정할 수 있으나 여기에서는 604800 초, 즉  1주일 이라 하겠다.
-		<security:remember-me data-source-ref="dataSource" token-validity-seconds="604800"/>
-		<security:logout logout-url="/logout" 
-						 invalidate-session="true"
-						 logout-success-url="/"
-						 delete-cookies="JSESSIONID,remember-me"/>	
-						 로그아웃시 remember-me 쿠키를 삭제하여 데이터베이스의 persistent_logins 내 해당 유저의 로그인 기록도 없앤다	
-	</security:http>
-	 -->
-	<!-- <security:authentication-manager>	
-		<security:authentication-provider user-service-ref="accountservice">
-		 	<security:password-encoder ref="bcryptPasswordEncoder"/>
-		</security:authentication-provider>
-	</security:authentication-manager> -->	
 </beans:beans>

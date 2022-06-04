@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -23,7 +24,14 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-//	 AuthenticationSuccessHandler 인터페이스를 구현한 LoginSuccessHandler 클래스
+	private TokenProvider tkProvider;
+
+	@Autowired
+	public LoginSuccessHandler(TokenProvider tkProvider) {
+		this.tkProvider = tkProvider;
+	}
+
+	// AuthenticationSuccessHandler 인터페이스를 구현한 LoginSuccessHandler 클래스
 //	 로그인에 성공시 성공한 허가증에 있는 GrantedAuthority 콜렉션에 ROLE_ADMIN 이라는 권한이 있다면
 //	 바로 관리자 페이지로 이동하며, 그렇지 않다면 알려드림 서비스의 메인 페이지로 이동한다.
 //	 react 방식으로 개발하므로 여기서는 redirect 시키는 것이 아닌
@@ -32,8 +40,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
 
+		boolean validUser=true;
 		AccountDetails logininfo = (AccountDetails) authentication.getPrincipal();
-
 		Iterator<GrantedAuthority> itr = logininfo.getAuthorities().iterator();
 
 //		RedirectStrategy rs = new DefaultRedirectStrategy();
@@ -48,7 +56,6 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 		// 로그인에 성공시 기본으로 이동활 화면은 홈 화면
 		// 1. 인증이 필요한 페이지를 사용하려다 로그인페이지로 들어와서 로그인에 성공한 케이스
 		// 2. 직접 로그인 창을 클릭해서 로그인에 성공한 케이스
-		System.out.println("+ print RequeestCache rc");
 		// logger.info(rc.getRequest(request, response).toString());
 		if (rc.getRequest(request, response) == null) {
 			// 2번 경우
@@ -78,14 +85,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 			if (logininfo.getM_quitdate() != null) {
 				System.out.println("called by loginsuccessHandler >> 탈퇴한 유저입니다");
 				msg = "*탈퇴한 계정으로는 로그인 할 수 없습니다";
-				// 세션 무효화
 				request.getSession().invalidate();
-				// 쿠키삭제
-//				logger.info("+ is cookies null?");
-//				logger.info(String.valueOf(request.getCookies()==null));
-//				logger.info("+ is request null?");
-//				logger.info(String.valueOf(request==null));
-				if(request.getCookies()!=null) {
+				if (request.getCookies() != null) {
 					for (Cookie cookie : request.getCookies()) {
 						if (cookie.getName().equals("remember-me")) {
 							cookie.setMaxAge(0);
@@ -99,29 +100,16 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 				SecurityContext context = SecurityContextHolder.getContext();
 				context.setAuthentication((Authentication) null);
 				SecurityContextHolder.clearContext();
-				
-//			    loginform 에 보여줄 메시지
-//				String insertedEmail=logininfo.getUsername();
-//				routerPath="/loginfailed?msg=".concat(msg).concat("&insertedEmail=".concat(insertedEmail));
-//				캐시 비움 막음
-//				String intercepted=request.getParameter("intercepted");
-//				System.out.println("intercepted...");
-//				System.out.println(intercepted);
-//				if(intercepted!=null){
-//						routerPath=routerPath.concat("&intercepted=true");
-//		    	};
+				validUser=false;
 			}
 		}
-//		System.out.println("보내는 페이지:".concat(routerPath));
-//		rs.sendRedirect(request, response, routerPath);
-		// response.setHeader("Content-Type", "text/html; charset=UTF=8");
 		
-		if (msg == null) {
-			// 주의 : key 값을 camel 법으로 작성해도 브라우저는 모두 소문자로 받기 때문에 
-			// front 단에서는 lowerCase에 대하여 분기해 주어야 한다.
+		if(validUser) {
+			tkProvider.createAuthToken(logininfo, response);
 			response.setHeader("routerPath", routerPath);
-		} else {
+		}else {
 			response.setHeader("msg", URLEncoder.encode(msg, "UTF-8"));
 		}
+		
 	}
 }

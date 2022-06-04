@@ -15,9 +15,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.jsonwebtoken.ExpiredJwtException;
+
 
 public class JwtRequestFilter extends OncePerRequestFilter{
 
@@ -45,7 +47,7 @@ public class JwtRequestFilter extends OncePerRequestFilter{
 		String jwtToken=null;
 		
 		final String tokenHeader=request.getHeader("Authorization");
-		
+		logger.info("+ authorization header value" + tokenHeader);
 		if(tokenHeader!=null && tokenHeader.startsWith("Bearer ")) {
 			jwtToken=tokenHeader.substring(7);
 			try {

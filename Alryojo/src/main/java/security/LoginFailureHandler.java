@@ -30,7 +30,6 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
 		// 3. DisabledException : 인증에는 성공했으나 Authentication 의  isEnabled 값이 false 일 경우
 		// 4. SessionAuthenticationException : 이미 인증이 된 아이디일 경우
 		String msg=null;
-
 		logger.info("+ called onAuthenticationFailure");
 		logger.info(exception.getMessage());		
 		if(exception instanceof UsernameNotFoundException) {
