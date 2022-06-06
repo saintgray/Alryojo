@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans:beans xmlns="http://www.springframework.org/schema/security" 
+<beans:beans xmlns="http://www.springframework.org/schema/security"
 	xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
 	<context:annotation-config/>
 	
 	<beans:bean id="accountservice" class="security.AccountService"></beans:bean>
@@ -26,6 +28,44 @@
 	
 	<beans:bean id="tokenProvider" class="security.TokenProvider"></beans:bean>
 	
+	<util:properties id="cors" location="WEB-INF/classes/security.properties"/>
+	
+	<beans:bean id="corsSource" class="org.springframework.web.cors.UrlBasedCorsConfigurationSource">
+		<beans:property name="corsConfigurations">
+			<util:map>
+				<beans:entry key="/**">
+					<beans:bean class="org.springframework.web.cors.CorsConfiguration">
+						<beans:property name="allowCredentials" value="true" />
+						<beans:property name="allowedHeaders">
+							<beans:list>
+								<beans:value>Authorization</beans:value>
+								<beans:value>Content-Type</beans:value>
+							</beans:list>
+						</beans:property>
+						<beans:property name="allowedMethods">
+							<beans:list>
+								<beans:value>POST</beans:value>
+								<beans:value>GET</beans:value>
+								<beans:value>PUT</beans:value>
+								<beans:value>DELETE</beans:value>
+							</beans:list>
+						</beans:property>
+						<beans:property name="allowedOrigins" value="http://localhost:3000"></beans:property>
+						<beans:property name="exposedHeaders">
+							<beans:list>
+								<beans:value>Location</beans:value>
+								<beans:value>Content-Deposition</beans:value>
+							</beans:list>
+						</beans:property>
+						<beans:property name="maxAge" value="86400"></beans:property>
+					</beans:bean>
+				</beans:entry>
+			</util:map>
+		</beans:property>
+	</beans:bean>
+	
+	
+	
 	<!-- <beans:bean id="tokenProvider" class="com.alj.dream.auth.controller.TokenProvideController"></beans:bean> -->
 	
 	<global-method-security pre-post-annotations="enabled"/>
@@ -34,10 +74,11 @@
 	<http pattern="/signup" security="none"></http>
 	
 	
-	<http pattern="/**" entry-point-ref="restAuthenticationEntryPoint" create-session="stateless">
+	<http pattern="/**" create-session="stateless">
 		<csrf disabled="true"/>
+		<cors configuration-source-ref="corsSource"/>
 		<custom-filter ref="jwtRequestFilter" before="FIRST"/>
-		<intercept-url pattern="/locations" access="isAuthenticated()"/>
+		<!-- <intercept-url pattern="/locations" access="isAuthenticated()"/> -->
 		<intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>
 		<form-login login-processing-url="/login" 
 		authentication-failure-handler-ref="loginfailurehandler"

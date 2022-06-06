@@ -11,14 +11,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
-public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint{
+//public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint{
+public class JwtAuthenticationEntryPoint{
 	
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@Override
+//	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {
 		logger.info("\n\n\n + commence called.....\n\n\n");
+		
+		logger.info("+ exception type : " + authException.getClass());
 		response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
 	}
 	

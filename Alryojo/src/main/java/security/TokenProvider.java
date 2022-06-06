@@ -19,10 +19,11 @@ public class TokenProvider {
 		this.jwtUtil = jwtUtil;
 	}
 
-	public void createAuthToken(UserDetails details, HttpServletResponse resp){
-
+	public String createAuthToken(UserDetails details, HttpServletResponse resp){
+		logger.info("+ create Jwt Token...");
 		String token = jwtUtil.generateToken(details);
-		jwtUtil.setTokenCookie(resp, token);
+		return token;
+//		jwtUtil.setTokenCookie(resp, token);
 	}
 
 }

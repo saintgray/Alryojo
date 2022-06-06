@@ -70,7 +70,8 @@ public class JwtUtil {
 	
 	// 토큰 유효성 검사
 	public boolean tokenIsValidated(String token, UserDetails userDetails) {
-		return (getUsernameFromToken(token).equals(userDetails.getUsername()) && ! getClaimFromToken(token, Claims::getExpiration).before(new Date()));
+		return (getUsernameFromToken(token).equals(((AccountDetails)(userDetails)).getUsername())
+				&& ! getClaimFromToken(token, Claims::getExpiration).before(new Date()));
 	}
 
 }

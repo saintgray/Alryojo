@@ -39,7 +39,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
-
+		
 		boolean validUser=true;
 		AccountDetails logininfo = (AccountDetails) authentication.getPrincipal();
 		Iterator<GrantedAuthority> itr = logininfo.getAuthorities().iterator();
@@ -105,8 +105,16 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 		}
 		
 		if(validUser) {
-			tkProvider.createAuthToken(logininfo, response);
+			logger.info("+ this is valid user");
+			
+			// tkProvider.createAuthToken(logininfo, response);
+			
 			response.setHeader("routerPath", routerPath);
+			response.setHeader("jwt", tkProvider.createAuthToken(logininfo, response));
+			
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			logger.info("+ setAuthentication...");
+			logger.info("Authentication is null? (check) : ".concat(String.valueOf(SecurityContextHolder.getContext().getAuthentication()==null)));
 		}else {
 			response.setHeader("msg", URLEncoder.encode(msg, "UTF-8"));
 		}
