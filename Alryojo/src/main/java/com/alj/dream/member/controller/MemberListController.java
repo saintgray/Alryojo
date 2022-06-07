@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import com.alj.dream.member.service.MemberListService;
 
 @RestController
 public class MemberListController {
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	private MemberListService memberListService;
@@ -46,8 +49,8 @@ public class MemberListController {
 	}
 	
 	@PostMapping("/admin/adminTest")
-	@ResponseBody
 	public Map<String,Object> test(){
+		logger.info("+ called admin test() method");
 		return new HashMap<String, Object>();
 	}
 	

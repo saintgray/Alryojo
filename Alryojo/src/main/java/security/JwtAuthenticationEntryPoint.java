@@ -9,20 +9,19 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
-//public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint{
-public class JwtAuthenticationEntryPoint{
+public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint{
 	
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-//	@Override
+	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {
 		logger.info("\n\n\n + commence called.....\n\n\n");
-		
+		logger.info("authentication info :  {}",SecurityContextHolder.getContext().getAuthentication());
 		logger.info("+ exception type : " + authException.getClass());
 		response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
 	}
-	
 }

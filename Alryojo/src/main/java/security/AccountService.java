@@ -12,6 +12,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import security.vo.AdminVO;
+import security.vo.MemberVO;
+
 @Service
 public class AccountService implements UserDetailsService {
 
@@ -47,9 +50,6 @@ public class AccountService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
 		boolean enabled = true;
-
-		System.out.println("username = " + username);
-
 		AccountDetails userDetails = null;
 
 		if (username.substring(username.indexOf("@")).equalsIgnoreCase("@aljdream.com")) {
@@ -59,7 +59,7 @@ public class AccountService implements UserDetailsService {
 			}
 			userDetails = new AccountDetails(vo.getAdmin_email(), vo.getAdmin_password(), true, true, true, true,
 					getRoleList(vo.getRole()), vo.getPhoto(), vo.getAdmin_nm(), vo.getAdmin_idx());
-
+			
 		} else {
 			MemberVO vo = stp.selectOne("selectbyusername", username);
 

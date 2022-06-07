@@ -19,7 +19,6 @@ import com.alj.dream.loc.service.LocationListService;
 
 @RestController
 @RequestMapping("/locations")
-@CrossOrigin(origins = "http://localhost:3000")
 public class LocationListController {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

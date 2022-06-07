@@ -8,13 +8,13 @@
 
  <mapper namespace="accountMapper">
 
-	<select id="selectbyusername" resultType="security.MemberVO">
+	<select id="selectbyusername" resultType="security.vo.MemberVO">
 		select * from dream.member where m_email=#{username}
 	</select>
 	
 	
 
-	<select id="selectbyadminname" resultType="security.AdminVO">
+	<select id="selectbyadminname" resultType="security.vo.AdminVO">
 		select* from dream.admin where admin_email=#{username}
 	</select>
 

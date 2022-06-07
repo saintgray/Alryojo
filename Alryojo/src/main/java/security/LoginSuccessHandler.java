@@ -24,14 +24,14 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	private TokenProvider tkProvider;
+	private JwtTokenProvider tkProvider;
 
 	@Autowired
-	public LoginSuccessHandler(TokenProvider tkProvider) {
+	public LoginSuccessHandler(JwtTokenProvider tkProvider) {
 		this.tkProvider = tkProvider;
 	}
 
-	// AuthenticationSuccessHandler 인터페이스를 구현한 LoginSuccessHandler 클래스
+//	 AuthenticationSuccessHandler 인터페이스를 구현한 LoginSuccessHandler 클래스
 //	 로그인에 성공시 성공한 허가증에 있는 GrantedAuthority 콜렉션에 ROLE_ADMIN 이라는 권한이 있다면
 //	 바로 관리자 페이지로 이동하며, 그렇지 않다면 알려드림 서비스의 메인 페이지로 이동한다.
 //	 react 방식으로 개발하므로 여기서는 redirect 시키는 것이 아닌
@@ -108,13 +108,15 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 			logger.info("+ this is valid user");
 			
 			// tkProvider.createAuthToken(logininfo, response);
-			
 			response.setHeader("routerPath", routerPath);
-			response.setHeader("jwt", tkProvider.createAuthToken(logininfo, response));
+			String token= tkProvider.createAuthToken(logininfo, response);
+			response.setHeader("jwt", token);
 			
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			logger.info("+ setAuthentication...");
 			logger.info("Authentication is null? (check) : ".concat(String.valueOf(SecurityContextHolder.getContext().getAuthentication()==null)));
+			
+			logger.info("+ token result ...." + token);
 		}else {
 			response.setHeader("msg", URLEncoder.encode(msg, "UTF-8"));
 		}

@@ -1,4 +1,4 @@
-package security;
+package security.vo;
 
 public class MemberVO {
 	

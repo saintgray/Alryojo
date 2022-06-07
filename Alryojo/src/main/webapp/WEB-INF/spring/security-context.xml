@@ -11,22 +11,19 @@
 	<context:annotation-config/>
 	
 	<beans:bean id="accountservice" class="security.AccountService"></beans:bean>
-	
-	<beans:bean id="loginsuccesshandler" class="security.LoginSuccessHandler"></beans:bean>
-	
-	<beans:bean id="accessdeniedhandler" class="security.UserAccessDeniedHandler"></beans:bean>
-	
-	<beans:bean id="loginfailurehandler" class="security.LoginFailureHandler"></beans:bean>
-		
 	<beans:bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></beans:bean>
 	
+	<beans:bean id="loginsuccesshandler" class="security.LoginSuccessHandler"></beans:bean>
+	<beans:bean id="loginfailurehandler" class="security.LoginFailureHandler"></beans:bean>
+	<beans:bean id="logouthandler" class="security.LogoutCustomHandler"></beans:bean>
+	<beans:bean id="logoutsuccesshandler" class="security.LogoutSuccessCustomHandler"></beans:bean>
+	
+	<beans:bean id="accessdeniedhandler" class="security.AccessDeniedCustomHandler"></beans:bean>	
+	
 	<beans:bean id="jwtUtil" class="security.JwtUtil"></beans:bean>
-	
 	<beans:bean id="jwtRequestFilter" class="security.JwtRequestFilter"></beans:bean>
-	
 	<beans:bean id="restAuthenticationEntryPoint" class="security.JwtAuthenticationEntryPoint"></beans:bean>
-	
-	<beans:bean id="tokenProvider" class="security.TokenProvider"></beans:bean>
+	<beans:bean id="tokenProvider" class="security.JwtTokenProvider"></beans:bean>
 	
 	<util:properties id="cors" location="WEB-INF/classes/security.properties"/>
 	
@@ -55,6 +52,8 @@
 							<beans:list>
 								<beans:value>Location</beans:value>
 								<beans:value>Content-Deposition</beans:value>
+								<beans:value>jwt</beans:value>
+								<beans:value>msg</beans:value>
 							</beans:list>
 						</beans:property>
 						<beans:property name="maxAge" value="86400"></beans:property>
@@ -70,19 +69,37 @@
 	
 	<global-method-security pre-post-annotations="enabled"/>
 	
-	<!-- <http pattern="/login" security="none"></http> -->
-	<http pattern="/signup" security="none"></http>
+	<!-- 시큐리티 적용을 무시하는 요청 url 을 설정한다.
+			일반적으로는 서버의 public 자원 (js, common files, images, css....) 이 있겠으나, 이러한 public 자원들은
+			React source 에서 관리하게 될 것이므로 설정하지 않아도 된다
+			만약 SSR 방식으로 구현하려는 서비스라면 정적 자원들에 대해 security 를 none 으로 설정해 주면 될 것이다. -->
+	<!-- <http pattern="/images..." security="none"></http> -->
+	<!-- <http pattern="/css..." security="none"></http> -->
 	
+	<!-- security=none 으로 설정한 url 을 제외한 모든 url 패턴에 대하여 security 를 적용시킨다. -->
+	<http pattern="/**" entry-point-ref="restAuthenticationEntryPoint" create-session="stateless">
 	
-	<http pattern="/**" create-session="stateless">
 		<csrf disabled="true"/>
 		<cors configuration-source-ref="corsSource"/>
-		<custom-filter ref="jwtRequestFilter" before="FIRST"/>
-		<!-- <intercept-url pattern="/locations" access="isAuthenticated()"/> -->
-		<intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>
+		<custom-filter ref="jwtRequestFilter" before="BASIC_AUTH_FILTER"/>
+		
+		<access-denied-handler ref="accessdeniedhandler"/>
 		<form-login login-processing-url="/login" 
 		authentication-failure-handler-ref="loginfailurehandler"
 		authentication-success-handler-ref="loginsuccesshandler"/>
+
+		
+		
+		<!-- url 패턴에 대해 권한을 설정한다. -->
+		<intercept-url pattern="/login" access="permitAll"/>
+		<intercept-url pattern="/logout" access="isAuthenticated()"/>
+		
+		<!-- <intercept-url pattern="/locations" access="isAuthenticated()"/> -->
+		<intercept-url pattern="/locations" access="permitAll"/>
+		<intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>
+		
+		
+		
 	</http>
 	
 	
@@ -90,7 +107,6 @@
 		<authentication-provider user-service-ref="accountservice">
 			<password-encoder ref="bcryptPasswordEncoder"/>
 		</authentication-provider>
-		
 	</authentication-manager>
 	
 	
