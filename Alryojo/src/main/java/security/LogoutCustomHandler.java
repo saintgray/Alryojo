@@ -10,14 +10,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
-//public class LogoutCustomHandler implements LogoutHandler{
-public class LogoutCustomHandler{
+public class LogoutCustomHandler implements LogoutHandler{
+//public class LogoutCustomHandler{
 
 	
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	
-//	@Override
+	@Override
 	public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
 		
 		logger.info("+ logout handler called....");
